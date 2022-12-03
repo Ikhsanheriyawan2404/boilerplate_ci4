@@ -44,6 +44,9 @@ $routes->post($reservedRoutes['login'], 'AuthController::attemptLogin');
 $routes->post($reservedRoutes['logout'], 'AuthController::logout');
 
 $routes->get('/', 'Home::index');
+$routes->group('', ['filter' => 'login'], function ($routes) {
+    $routes->get('transactions', 'Transaction::index');
+});
 
 /*
  * --------------------------------------------------------------------

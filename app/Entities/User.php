@@ -2,10 +2,12 @@
 
 namespace App\Entities;
 
-use CodeIgniter\Entity\Entity;
 use Exception;
-use Myth\Auth\Password;
 use RuntimeException;
+use Myth\Auth\Password;
+use App\Models\StoreModel;
+use App\Models\UserModel;
+use CodeIgniter\Entity\Entity;
 
 class User extends \Myth\Auth\Entities\User
 {
@@ -50,6 +52,13 @@ class User extends \Myth\Auth\Entities\User
      * @var array
      */
     protected $roles = [];
+
+     /**
+     * Per-user stores cache
+     *
+     * @var array
+     */
+    protected $stores = [];
 
     /**
      * Automatically hashes the password when set.
@@ -286,5 +295,32 @@ class User extends \Myth\Auth\Entities\User
     public function setPermissions(?array $permissions = null)
     {
         throw new RuntimeException('User entity does not support saving permissions directly.');
+    }
+
+    /**
+     * Returns the user's roles, formatted for simple checking:
+     *
+     * [
+     *    id => name,
+     *    id => name,
+     * ]
+     *
+     * @return array|mixed
+     */
+    public function getStores()
+    {
+        if (empty($this->id)) {
+            throw new RuntimeException('Users must be created before getting stores.');
+        }
+
+        if (empty($this->stores)) {
+            $stores = model(UserModel::class)->getStoresForUser($this->id);
+
+            foreach ($stores as $key => $store) {
+                $this->stores[$key] = $store->store_id;
+            }
+        }
+
+        return $this->stores;
     }
 }

@@ -121,4 +121,20 @@ class UserModel extends Model
             'password' => bin2hex(random_bytes(16)),
         ]);
     }
+
+    protected string $userModel = UserModel::class;
+
+    public function getStoresForUser(int $userId)
+    {
+        $found = model(UserModel::class)
+            ->select('user_store.store_id')
+            ->join('user_store', 'user_store.user_id = users.id', 'inner')
+            ->join('stores', 'user_store.store_id = stores.id', 'inner')
+            ->where('user_id', $userId)
+            ->findAll();
+            // ->get()
+            // ->getResultArray();
+
+        return $found;
+    }
 }
