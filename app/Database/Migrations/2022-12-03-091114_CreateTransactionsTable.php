@@ -24,7 +24,6 @@ class CreateTransactionsTable extends Migration
 			],
             'amount'       => [
 				'type'       => 'DECIMAL',
-				'constraint' => '255',
 			],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
