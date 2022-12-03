@@ -33,8 +33,16 @@ $routes->set404Override();
  * --------------------------------------------------------------------
  */
 
-// We get a performance increase by specifying the default
-// route since we don't have to scan directories.
+
+ // Load the reserved routes from Auth.php
+$config         = config(App\Config\Auth::class);
+$reservedRoutes = $config->reservedRoutes;
+
+// Login/out
+$routes->get($reservedRoutes['login'], 'AuthController::login', ['as' => $reservedRoutes['login']]);
+$routes->post($reservedRoutes['login'], 'AuthController::attemptLogin');
+$routes->post($reservedRoutes['logout'], 'AuthController::logout');
+
 $routes->get('/', 'Home::index');
 
 /*
