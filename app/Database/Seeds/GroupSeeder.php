@@ -11,7 +11,7 @@ class GroupSeeder extends Seeder
     {
         $groups = new GroupModel();
 		$groups->insert([
-			'name' => 'Super Admin',
+			'name' => 'Superadmin',
 			'description' => 'Level Dewa',
 		]);
 
@@ -22,8 +22,8 @@ class GroupSeeder extends Seeder
 		}
 
 		$groups->insert([
-			'name' => 'Admin',
-			'description' => 'Level Dewa',
+			'name' => 'Manager',
+			'description' => 'Level Manager',
 		]);
 
 		$admin = $permissions->whereIn('name', [

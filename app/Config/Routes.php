@@ -45,6 +45,10 @@ $routes->post($reservedRoutes['logout'], 'AuthController::logout');
 
 $routes->get('/', 'Home::index');
 $routes->group('', ['filter' => 'login'], function ($routes) {
+    $routes->get('company/datatables', 'Company::datatables');
+    $routes->resource('company');
+    $routes->resource('user');
+    $routes->resource('group');
     $routes->get('transactions', 'Transaction::index');
 });
 
