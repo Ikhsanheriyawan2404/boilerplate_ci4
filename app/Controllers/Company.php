@@ -21,6 +21,7 @@ class Company extends BaseController
     {
         $builder = $this->companies->select('id,name');
         return DataTable::of($builder)
+            ->addNumbering('no')
             ->add('action', function ($row) {
                 $btn = '<td class="text-center">
                     <div class="dropdown d-inline-block">
@@ -53,9 +54,18 @@ class Company extends BaseController
     public function create()
     {
         $data = [
-            'id'       => $this->request->getPost('company_id'),
-            'name'    => $this->request->getPost('name'),
+            'id'    => $this->request->getPost('company_id'),
+            'name'  => $this->request->getPost('name'),
         ];
-        $this->companies->save($data);
+        if ($this->companies->save($data) === false) {
+            return $this->respond([
+                'message' => $this->companies->errors(),
+                'status' => false,
+            ]);
+        }
+        return $this->respond([
+            'message' => 'Data berhasil disimpan',
+            'status' => true,
+        ]);
     }
 }

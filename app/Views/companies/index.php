@@ -66,6 +66,10 @@
 <!-- DataTables -->
 <link rel="stylesheet" href="<?= base_url('template') ?>/plugins/datatables/css/dataTables.bootstrap4.min.css">
 
+<link rel="stylesheet" href="<?= base_url('template') ?>/plugins/sweetalert2/sweetalert2.min.css">
+<link rel="stylesheet" href="<?= base_url('template') ?>/plugins/toastr/toastr.min.css">
+
+
 <?= $this->endSection() ?>
 
 <?= $this->section('custom-scripts') ?>
@@ -74,14 +78,18 @@
 <script src="<?= base_url('template') ?>/plugins/datatables/datatables.min.js"></script>
 <script src="<?= base_url('template') ?>/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
 
+<script src="<?= base_url('template') ?>/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script src="<?= base_url('template') ?>/plugins/toastr/toastr.min.js"></script>
+
 <script>
 $(document).ready(function() {
     let table = $('#datatables').DataTable({
         processing: true,
         serverSide: true,
         ajax: '<?= base_url('company/datatables'); ?>',
+        order: [],
         columns: [
-            {data: 'id'},
+            {data: 'no', orderable: false},
             {data: 'name'},
             {data: 'action', orderable: false},
         ]
@@ -104,7 +112,7 @@ $(document).ready(function() {
         }, 500);
         $('#saveBtn').removeAttr('disabled');
         $('#saveBtn').html("Simpan");
-        $('#item_id').val('');
+        $('#company_id').val('');
         $('#itemForm').trigger("reset");
         $('.modal-title').html("Tambah Perusahaan");
         $('#modal-md').modal('show');
@@ -139,29 +147,24 @@ $(document).ready(function() {
                 $('#saveBtn').html('Simpan ...');
                 $('#itemForm').trigger("reset");
                 $('#modal-md').modal('hide');
-                var data = table.ajax.json();
-
-                // Modify data
-                $.each(data.data, function(){
-                this[0] = 'John Smith';
-                });
-
-                // Clear table
-                table.clear();
-
-                // Add updated data
-                table.rows.add(data.data);
-
-                // Redraw table
                 table.draw();
+                if (data.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oppss',
+                        text: 'Coba isi kembali data dengan benar!',
+                    });
+                    $.each(data.message, function (index, value) {
+                        toastr.error(value);
+                    });
+                }
             },
-            error: function (data) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Data masih kosong!',
-                });
-            }
         });
     });
 });

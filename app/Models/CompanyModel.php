@@ -24,8 +24,14 @@ class CompanyModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
+    protected $validationRules      = [
+        'name' => 'required',
+    ];
+    protected $validationMessages   = [
+        'name' => [
+            'required' => 'Nama perusahaan tidak boleh kosong',
+        ],
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 }
