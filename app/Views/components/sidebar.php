@@ -59,9 +59,54 @@
                 </ul>
             </li>
             <li>
-                <a href="<?= base_url('item') ?>">
+                <a href="#">
+                    <i class="metismenu-icon pe-7s-diamond"></i>
+                    Inventory
+                    <i class="metismenu-state-icon pe-7s-angle-down caret-left"></i>
+                </a>
+                <ul>
+                    <li>
+                        <a href="<?= site_url('item') ?>">
+                            <i class="metismenu-icon"></i>
+                            Item Master
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= site_url('warehouse') ?>">
+                            <i class="metismenu-icon"></i>
+                            Gudang
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= site_url('group') ?>">
+                            <i class="metismenu-icon"></i>
+                            List Harga Item
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="<?= base_url('purchase') ?>">
                     <i class="metismenu-icon pe-7s-display2"></i>
-                    Item Master
+                    Purchases Order
+                </a>
+            </li>
+            <li>
+                <a href="<?= base_url('sale') ?>">
+                    <i class="metismenu-icon pe-7s-display2"></i>
+                    Sales Order
+                </a>
+            </li>
+            <li>
+                <a href="<?= base_url('contact') ?>">
+                    <i class="metismenu-icon pe-7s-display2"></i>
+                    Contacts
+                </a>
+            </li>
+            <li>
+                <a href="<?= base_url('account') ?>">
+                    <i class="metismenu-icon pe-7s-display2"></i>
+                    Chart Of Accounts
                 </a>
             </li>
             <li class="app-sidebar__heading">UI Components</li>
