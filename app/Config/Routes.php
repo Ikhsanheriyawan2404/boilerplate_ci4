@@ -55,6 +55,9 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('item/datatables', 'Item::datatables');
     $routes->resource('item');
 
+    $routes->get('warehouse/datatables', 'Warehouse::datatables');
+    $routes->resource('warehouse');
+
     $routes->resource('user');
     $routes->resource('group');
     $routes->get('transactions', 'Transaction::index');
