@@ -25,8 +25,6 @@ class CreateItemWarehouseTable extends Migration
 			'stock' => [
 				'type'       => 'DECIMAL',
 			],
-			'created_at'       => ['type' => 'datetime', 'null' => true],
-            'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
 
 		$this->forge->addKey('id', true);
