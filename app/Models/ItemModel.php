@@ -4,20 +4,20 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class StoreModel extends Model
+class ItemModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'stores';
+    protected $table            = 'items';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'company_id'];
+    protected $allowedFields    = ['item_code', 'name', 'selling_price', 'purchase_price'];
 
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -25,17 +25,23 @@ class StoreModel extends Model
 
     // Validation
     protected $validationRules      = [
+        'item_code' => 'required',
         'name' => 'required',
-        'company_id' => 'required',
+        'purchase_price' => 'required',
+        'selling_price' => 'required',
     ];
-    protected $validationMessages   = [
-        'name' => [
-            'required' => 'Nama toko tidak boleh kosong'
-        ],
-        'company_id' => [
-            'required' => 'Nama perusahaan tidak boleh kosong'
-        ],
-    ];
+    protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
+
+    // Callbacks
+    protected $allowCallbacks = true;
+    protected $beforeInsert   = [];
+    protected $afterInsert    = [];
+    protected $beforeUpdate   = [];
+    protected $afterUpdate    = [];
+    protected $beforeFind     = [];
+    protected $afterFind      = [];
+    protected $beforeDelete   = [];
+    protected $afterDelete    = [];
 }

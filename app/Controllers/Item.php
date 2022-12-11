@@ -2,23 +2,23 @@
 
 namespace App\Controllers;
 
-use App\Models\CompanyModel;
+use App\Models\ItemModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
 
-class Company extends BaseController
+class Item extends BaseController
 {
     use ResponseTrait;
     
     public function __construct()
     {
-        $this->companies = new CompanyModel();
+        $this->items = new ItemModel();
     }
 
     public function datatables()
     {
-        $builder = $this->companies->select('id,name');
+        $builder = $this->items->select('id, name, item_code, purchase_price, selling_price');
         return DataTable::of($builder)
             ->addNumbering('no')
             ->add('action', function ($row) {
@@ -38,26 +38,24 @@ class Company extends BaseController
 
     public function index()
     {
-        return view('companies/index', [
-            'title' => 'Perusahaan',
+        return view('items/index', [
+            'title' => 'Toko/Agen/Store',
         ]);
     }
 
     public function edit($id)
     {
-        $company = $this->companies->find($id);
-        return $this->respond($company);
+        $store = $this->items->find($id);
+        return $this->respond($store);
     }
 
     public function create()
     {
-        $data = [
-            'id'    => $this->request->getPost('company_id'),
-            'name'  => $this->request->getPost('name'),
-        ];
-        if ($this->companies->save($data) === false) {
+        $data = $this->request->getPost();
+        $data['id'] = $this->request->getPost('item_id'); 
+        if ($this->items->save($data) === false) {
             return $this->respond([
-                'message' => $this->companies->errors(),
+                'message' => $this->items->errors(),
                 'status' => false,
             ]);
         }

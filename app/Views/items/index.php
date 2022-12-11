@@ -10,12 +10,12 @@
                     <i class="fa fa-users icon-gradient bg-happy-itmeo">
                     </i>
                 </div>
-                <div>Data Perusahaan
+                <div>Data Items
                     <div class="page-title-subheading">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Perusahaan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Items</li>
                             </ol>
                         </nav>
                     </div>
@@ -36,7 +36,7 @@
         <div class="col-md-12">
             <div class="main-card mb-3 card">
                 <div class="card-header">
-                    <h3 class="card-title">Data Perusahaan</h3>
+                    <h3 class="card-title">Data Item</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -44,7 +44,10 @@
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <th width="3%">No</th>
+                                    <th>Code</th>
                                     <th>Name</th>
+                                    <th>Harga Jual</th>
+                                    <th>Harga Beli</th>
                                     <th class="text-center"><i class="fa fa-cog"></i></th>
                                 </tr>
                             </thead>
@@ -86,11 +89,14 @@ $(document).ready(function() {
     let table = $('#datatables').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '<?= base_url('company/datatables'); ?>',
+        ajax: '<?= base_url('item/datatables'); ?>',
         order: [],
         columns: [
             {data: 'no', orderable: false},
+            {data: 'item_code'},
             {data: 'name'},
+            {data: 'selling_price'},
+            {data: 'purchase_price'},
             {data: 'action', orderable: false},
         ]
     });
@@ -112,24 +118,25 @@ $(document).ready(function() {
         }, 500);
         $('#saveBtn').removeAttr('disabled');
         $('#saveBtn').html("Simpan");
-        $('#company_id').val('');
+        $('#item_id').val('');
         $('#itemForm').trigger("reset");
-        $('.modal-title').html("Tambah Perusahaan");
+        $('.modal-title').html("Tambah Toko");
         $('#modal-md').modal('show');
     });
 
     $('body').on('click', '#editItem', function () {
-        var company_id = $(this).data('id');
-        $.get("<?= base_url('company') ?>" +'/' + company_id +'/edit', function (data) {
+        var item_id = $(this).data('id');
+        $.get("<?= base_url('item') ?>" +'/' + item_id +'/edit', function (data) {
             $('#modal-md').modal('show');
             setTimeout(function () {
                 $('#name').focus();
             }, 500);
-            $('#modal-title').html("Edit Perusahaan");
+            $('#modal-title').html("Edit Toko");
             $('#saveBtn').removeAttr('disabled');
             $('#saveBtn').html("Simpan");
-            $('#company_id').val(data.id);
+            $('#item_id').val(data.id);
             $('#name').val(data.name);
+            $('#company_id').val(data.company_id);
         })
     });
 
@@ -138,7 +145,7 @@ $(document).ready(function() {
         var formData = new FormData($('#itemForm')[0]);
         $.ajax({
             data: formData,
-            url: "<?= base_url('company') ?>",
+            url: "<?= base_url('item') ?>",
             contentType : false,
             processData : false,
             type: "POST",
@@ -181,11 +188,23 @@ $(document).ready(function() {
                 </button>
             </div>
             <form method="post" id="itemForm" name="itemForm">
-                <input type="hidden" name="company_id" id="company_id">
+                <input type="hidden" name="item_id" id="item_id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="name">Nama</label>
+                        <label for="item_code">Kode Item</label>
+                        <input type="text" class="form-control form-control-sm mr-2" name="item_code" id="item_code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Nama Item</label>
                         <input type="text" class="form-control form-control-sm mr-2" name="name" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="selling_price">Harga Jual</label>
+                        <input type="number" class="form-control form-control-sm mr-2" name="selling_price" id="selling_price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purchase_price">Harga Beli</label>
+                        <input type="number" class="form-control form-control-sm mr-2" name="purchase_price" id="purchase_price" required>
                     </div>
                 </div>
                 <div class="modal-footer">

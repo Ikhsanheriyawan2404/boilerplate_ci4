@@ -43,10 +43,18 @@ $routes->get($reservedRoutes['login'], 'AuthController::login', ['as' => $reserv
 $routes->post($reservedRoutes['login'], 'AuthController::attemptLogin');
 $routes->post($reservedRoutes['logout'], 'AuthController::logout');
 
-$routes->get('/', 'Home::index');
 $routes->group('', ['filter' => 'login'], function ($routes) {
+    $routes->get('/', 'Home::index');
+    $routes->get('dashboard', 'Home::dashboard', ['filter' => 'permission:developer-module']);
     $routes->get('company/datatables', 'Company::datatables');
     $routes->resource('company');
+
+    $routes->get('store/datatables', 'Store::datatables');
+    $routes->resource('store');
+
+    $routes->get('item/datatables', 'Item::datatables');
+    $routes->resource('item');
+
     $routes->resource('user');
     $routes->resource('group');
     $routes->get('transactions', 'Transaction::index');

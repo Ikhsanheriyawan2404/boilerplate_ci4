@@ -24,27 +24,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="<?= base_url('brancharea') ?>">
-                            <i class="metismenu-icon"></i>
-                            Branch Area
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?= site_url('store') ?>">
+                    <a href="<?= site_url('store') ?>">
                             <i class="metismenu-icon"></i>
                             Store
                         </a>
                     </li>
                     <li>
-                        <a href="<?= site_url('designation') ?>">
-                            <i class="metismenu-icon"></i>
-                            Penunjukan
-                        </a>
-                    </li>
-                    <li>
                         <a href="<?= base_url('contact') ?>">
                             <i class="metismenu-icon"></i>
-                            Kontak Manager
+                            User
                         </a>
                     </li>
                 </ul>
@@ -71,9 +59,9 @@
                 </ul>
             </li>
             <li>
-                <a href="tables-regular.html">
+                <a href="<?= base_url('item') ?>">
                     <i class="metismenu-icon pe-7s-display2"></i>
-                    Tables
+                    Item Master
                 </a>
             </li>
             <li class="app-sidebar__heading">UI Components</li>

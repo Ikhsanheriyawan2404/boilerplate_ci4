@@ -9,8 +9,10 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $data = [
-			'post-module',
-			'category-module',
+			'developer-module',
+			'example1-module',
+			'example2-module',
+			'example3-module',
 			'user-module',
 			'group-module',
 		];

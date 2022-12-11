@@ -2,23 +2,25 @@
 
 namespace App\Controllers;
 
-use App\Models\CompanyModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
+use App\Models\{CompanyModel, StoreModel};
 
-class Company extends BaseController
+class Store extends BaseController
 {
     use ResponseTrait;
     
     public function __construct()
     {
+        $this->stores = new StoreModel();
         $this->companies = new CompanyModel();
     }
 
     public function datatables()
     {
-        $builder = $this->companies->select('id,name');
+        $builder = $this->stores->select('stores.id, stores.name as store_name, companies.name as company_name')
+            ->join('companies', 'companies.id = stores.company_id');
         return DataTable::of($builder)
             ->addNumbering('no')
             ->add('action', function ($row) {
@@ -38,26 +40,28 @@ class Company extends BaseController
 
     public function index()
     {
-        return view('companies/index', [
-            'title' => 'Perusahaan',
+        return view('stores/index', [
+            'title' => 'Toko/Agen/Store',
+            'companies' => $this->companies->findAll()
         ]);
     }
 
     public function edit($id)
     {
-        $company = $this->companies->find($id);
-        return $this->respond($company);
+        $store = $this->stores->find($id);
+        return $this->respond($store);
     }
 
     public function create()
     {
         $data = [
-            'id'    => $this->request->getPost('company_id'),
+            'id'    => $this->request->getPost('store_id'),
             'name'  => $this->request->getPost('name'),
+            'company_id'  => $this->request->getPost('company_id'),
         ];
-        if ($this->companies->save($data) === false) {
+        if ($this->stores->save($data) === false) {
             return $this->respond([
-                'message' => $this->companies->errors(),
+                'message' => $this->stores->errors(),
                 'status' => false,
             ]);
         }

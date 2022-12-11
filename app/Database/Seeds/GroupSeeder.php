@@ -9,28 +9,39 @@ class GroupSeeder extends Seeder
 {
     public function run()
     {
+		$permissions = new PermissionModel();
+		
         $groups = new GroupModel();
 		$groups->insert([
 			'name' => 'Superadmin',
 			'description' => 'Level Dewa',
 		]);
 
-		$permissions = new PermissionModel();
-		$superadmin = $permissions->findAll();
-		foreach ($superadmin as $permission) {
-			$groups->addPermissionToGroup($permission->id, $groups->getInsertID());
-		}
+		$groups->addPermissionToGroup(1, $groups->getInsertID());
+		/////////////////////////////////////////
 
 		$groups->insert([
 			'name' => 'Manager',
 			'description' => 'Level Manager',
 		]);
 
-		$admin = $permissions->whereIn('name', [
-			'post-module', 'category-module'
-		])->findAll();
-		foreach ($admin as $permission) {
+		$manager = $permissions->findAll();
+		foreach ($manager as $permission) {
 			$groups->addPermissionToGroup($permission->id, $groups->getInsertID());
 		}
+		// ================================================
+
+		$groups->insert([
+			'name' => 'Audior',
+			'description' => 'Level Auditor',
+		]);
+		$auditor = $permissions->whereIn('name', [
+			'post-module', 'category-module'
+		])->findAll();
+
+		foreach ($auditor as $permission) {
+			$groups->addPermissionToGroup($permission->id, $groups->getInsertID());
+		}
+		// ================================================
     }
 }

@@ -10,4 +10,11 @@ class Home extends BaseController
             'title' => 'Home'
         ]);
     }
+
+    public function dashboard()
+    {
+        return view('dashboard', [
+            'title' => 'Dashboard'
+        ]);
+    }
 }
