@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
         $this->call('GroupSeeder');
 		$this->call('CompanySeeder');
 		$this->call('StoreSeeder');
-		$this->call('TransactionSeeder');
+		// $this->call('TransactionSeeder');
 		$this->call('UserSeeder');
     }
 }

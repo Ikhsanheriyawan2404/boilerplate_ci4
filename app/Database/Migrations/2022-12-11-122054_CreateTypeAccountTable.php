@@ -28,6 +28,7 @@ class CreateTypeAccountTable extends Migration
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
+		$this->forge->addKey('id', true);
 		$this->forge->createTable('type_account');
     }
 
