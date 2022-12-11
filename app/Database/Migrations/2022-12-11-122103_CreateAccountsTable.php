@@ -15,8 +15,8 @@ class CreateAccountsTable extends Migration
 				'auto_increment' => true,
 			],
             'code'          => [
-				'type'           => 'BIGINT',
-                'unsigned' => true,
+				'type'           => 'VARCHAR',
+                'constraint' => '255',
 			],
             'type_account_id'          => [
 				'type'           => 'BIGINT',
@@ -32,7 +32,11 @@ class CreateAccountsTable extends Migration
 			],
             'locked'          => [
 				'type'           => 'INT',
-                'default' => 1
+                'default' => 0
+			],
+			'saldo'          => [
+				'type'           => 'DECIMAL',
+				'constraint' => '15,2'
 			],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
