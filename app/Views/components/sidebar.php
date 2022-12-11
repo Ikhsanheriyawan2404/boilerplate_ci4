@@ -126,7 +126,7 @@
                 </a>
                 <ul>
                     <li>
-                        <a href="<?= site_url('accounts') ?>">
+                        <a href="<?= site_url('account') ?>">
                             <i class="metismenu-icon"></i>
                             Chart Of Accounts
                         </a>
