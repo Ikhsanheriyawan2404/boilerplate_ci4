@@ -54,7 +54,8 @@ class CreateAccountsTable extends Migration
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
 		$this->forge->addKey('id', true);
-		// $this->forge->addForeignKey('store_id', 'stores', 'id');
+		$this->forge->addUniqueKey('code', true);
+		$this->forge->addForeignKey('store_id', 'stores', 'id');
 		$this->forge->addForeignKey('type_account_id', 'type_account', 'id');
 		$this->forge->createTable('accounts');
     }

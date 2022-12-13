@@ -4,27 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AccountModel extends Model
+class Journal extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'accounts';
+    protected $table            = 'journals';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [
-        'code',
-        'store_id',
-        'name',
-        'saldo',
-        'description',
-        'locked',
-        'type_account_id',
-        'credit',
-        'debit',
-    ];
+    protected $allowedFields    = [];
 
     // Dates
     protected $useTimestamps = false;

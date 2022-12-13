@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\I18n\Time;
 use App\Models\AccountModel;
+use App\Models\TypeAccountModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
-use App\Models\TypeAccountModel;
 
 class Account extends BaseController
 {
@@ -40,6 +41,30 @@ class Account extends BaseController
 
     public function index()
     {
+        $journals = new \App\Models\JournalModel();
+        $transactions = new \App\Models\JournalTransactionModel();
+        $accounts = new \App\Models\AccountModel();
+        
+        // Journal 1 Penambahan Modal Pak Ahmat
+        $journals->insert([
+            'store_id' => 1,
+            'transaction_number' => 'Journal#1001',
+            'date' => Time::now(),
+            'description' => 'Penambahan Modal Awal'
+        ]);
+
+        $data = [
+            'store_id' => 1,
+            'account_code' => '11201',
+            'journal_id' => $journals->getInsertID(),
+            'debit' => 200000000,
+            'credit' => 0,
+        ];
+        $transactions->insert($data);
+        $accounts->where('code', $data['account_code'])->update([
+            'debit' => $data['debit'],
+            'credit' => $data['credit'],
+        ]);
         return view('accounts/index', [
             'title' => 'Akun Master',
             'type_accounts' => $this->type_accounts->findAll(),
