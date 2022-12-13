@@ -288,42 +288,42 @@ class AccountSeeder extends Seeder
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '810', 'name' => 'Pendapatan Bunga / Jasa Giro'
+                'code' => '81000', 'name' => 'Pendapatan Bunga / Jasa Giro'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '811', 'name' => 'Pendapatan lain-lain'
+                'code' => '81100', 'name' => 'Pendapatan lain-lain'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '820', 'name' => 'Pajak atas Bunga dan Jasa Giro'
+                'code' => '82000', 'name' => 'Pajak atas Bunga dan Jasa Giro'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '821', 'name' => 'Beban Administrasi Bank'
+                'code' => '82100', 'name' => 'Beban Administrasi Bank'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '822', 'name' => 'Beban Bunga Pinjaman Bank'
+                'code' => '82200', 'name' => 'Beban Bunga Pinjaman Bank'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '823', 'name' => 'Biaya Sumbangan'
+                'code' => '82300', 'name' => 'Biaya Sumbangan'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 8,
-                'code' => '899', 'name' => 'Beban PPh Pasal 22 - Final'
+                'code' => '89900', 'name' => 'Beban PPh Pasal 22 - Final'
             ],
             [
                 'store_id' => 1,
                 'type_account_id' => 9,
-                'code' => '900', 'name' => 'Beban PPh Badan - Non Final'
+                'code' => '90000', 'name' => 'Beban PPh Badan - Non Final'
             ],
         ];
         

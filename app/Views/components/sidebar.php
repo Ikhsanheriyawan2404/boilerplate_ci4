@@ -132,7 +132,7 @@
                         </a>
                     </li>
                     <li> 
-                        <a href="<?= site_url('journals') ?>">
+                        <a href="<?= site_url('journal') ?>">
                             <i class="metismenu-icon"></i>
                             Jurnal Entry
                         </a>

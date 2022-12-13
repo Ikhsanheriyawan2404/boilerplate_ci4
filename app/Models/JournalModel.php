@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use Config\Database;
 
 class JournalModel extends Model
 {
@@ -11,7 +12,7 @@ class JournalModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
-    protected $returnType       = 'objects';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -35,14 +36,18 @@ class JournalModel extends Model
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    public function findById($id)
+    {
+        $db = Database::connect();
+        $builder = $db->table('journal_transactions as jt');
+        return $builder->select('
+            jt.id, jt.credit, jt.debit, jt.account_code,
+            journals.transaction_number,
+            journals.date,
+            journals.description')
+            ->where('journal_id', $id)
+            ->where('jt.journal_id', $id)
+            ->join('journals', 'jt.journal_id = journals.id')
+            ->get()->getResultObject();
+    }
 }

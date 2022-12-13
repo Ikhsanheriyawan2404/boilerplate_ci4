@@ -43,9 +43,9 @@ class Journal extends BaseController
         ]);
     }
 
-    public function show($id)
+    public function show($id = null)
     {
-        $store = $this->journals->find($id);
-        return $this->respond($store);
+        $journal = $this->journals->findById($id);
+        return $this->respond($journal);
     }
 }

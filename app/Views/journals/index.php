@@ -101,78 +101,23 @@ $(document).ready(function() {
         ]
     });
 
-    $('a#showDetails').on('click', function () {
-        var user_id = $(this).data('id');
-        $('#detailsModal').modal('show');
-        $.get("<?= base_url('user') ?>" + '/' + user_id, function(data) {
-            $('#email').html(data.email);
-            $('#username').html(data.username);
-            $('#createdAt').html(data.created_at);
-            $('#group').html(data.name);
-        });
-    });
-
-    $('#journal').click(function () {
-        setTimeout(function () {
-            $('#name').focus();
-        }, 500);
-        $('#saveBtn').removeAttr('disabled');
-        $('#saveBtn').html("Simpan");
-        $('#journal_id').val('');
-        $('#journalForm').trigger("reset");
-        $('.modal-title').html("Tambah Toko");
-        $('#modal-md').modal('show');
-    });
-
-    $('body').on('click', '#journal', function () {
+    $('body').on('click', '#showDetails', function() {
         var journal_id = $(this).data('id');
-        $.get("<?= base_url('journal') ?>" +'/' + journal_id +'/edit', function (data) {
-            $('#modal-md').modal('show');
-            setTimeout(function () {
-                $('#name').focus();
-            }, 500);
-            $('#modal-title').html("Edit Toko");
-            $('#saveBtn').removeAttr('disabled');
-            $('#saveBtn').html("Simpan");
-            $('#journal_id').val(data.id);
-            $('#name').val(data.name);
-            $('#company_id').val(data.company_id);
+        $('#modal-md').modal('show');
+        $.get("<?= base_url('journal') ?>" + '/' + journal_id, function(data) {
+            $.each(data, function (key, value) {
+                $('#journal_id').val(value.id);
+                $('#transaction_number').html(value.transaction_number);
+                $('#date').html(value.date);
+                $('#description').html(value.description);
+                $('tbody#modal').append(`<tr class="products">
+                    <td>${value.account_code}</td>
+                    <td>${value.debit}</td>
+                    <td>${value.credit}</td>
+                </tr>`);
+            })
         })
-    });
-
-    $('#saveBtn').click(function (e) {
-        e.preventDefault();
-        var formData = new FormData($('#journalForm')[0]);
-        $.ajax({
-            data: formData,
-            url: "<?= base_url('journal') ?>",
-            contentType : false,
-            processData : false,
-            type: "POST",
-            success: function (data) {
-                $('#saveBtn').attr('disabled', 'disabled');
-                $('#saveBtn').html('Simpan ...');
-                $('#journalForm').trigger("reset");
-                $('#modal-md').modal('hide');
-                table.draw();
-                if (data.status) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: data.message,
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oppss',
-                        text: 'Coba isi kembali data dengan benar!',
-                    });
-                    $.each(data.message, function (index, value) {
-                        toastr.error(value);
-                    });
-                }
-            },
-        });
+        $('tr.products').remove();
     });
 });
 </script>
@@ -182,35 +127,38 @@ $(document).ready(function() {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="detailsModalLabel">User Detail</h5>
+                <h5 class="modal-title" id="detailsModalLabel">Journal Detail</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form method="post" id="journalForm" name="journalForm">
-                <input type="hidden" name="journal_id" id="journal_id">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="journal_code">Kode journal</label>
-                        <input type="text" class="form-control form-control-sm mr-2" name="journal_code" id="journal_code" required>
+            <div class="modal-body">
+            <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Faktur : <i id="transaction_number"></i></li>
+                            <li class="list-group-item">Tanggal : <i id="date"></i></li>
+                        </ul>
                     </div>
-                    <div class="form-group">
-                        <label for="name">Nama journal</label>
-                        <input type="text" class="form-control form-control-sm mr-2" name="name" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="selling_price">Harga Jual</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="selling_price" id="selling_price" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="purchase_price">Harga Beli</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="purchase_price" id="purchase_price" required>
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Description : <i id="description"></i></li>
+                        </ul>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary" id="saveBtn" value="create">Simpan</button>
-                </div>
-            </form>
+                <table class="table table-sm table-bordered table-striped" id="table">
+                    <thead class="bg-navy">
+                        <tr>
+                            <th>Kode</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
