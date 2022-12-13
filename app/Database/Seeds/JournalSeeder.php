@@ -2,12 +2,10 @@
 
 namespace App\Database\Seeds;
 
-use App\Models\AccountModel;
 use CodeIgniter\I18n\Time;
-use App\Models\JournalModel;
-use App\Models\JournalTransactionModel;
 use CodeIgniter\Database\Seeder;
-use Config\Database;
+use App\Models\JournalTransactionModel;
+use App\Models\{JournalModel, AccountModel};
 
 class JournalSeeder extends Seeder
 {
@@ -85,14 +83,14 @@ class JournalSeeder extends Seeder
             'account_code' => '21000',
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => 1500000,
+            'credit' => 15000000,
         ]);
 
         $this->saveDetailJournal([
             'store_id' => 1,
             'account_code' => $persedianBarang,
             'journal_id' => $journalId,
-            'debit' => 1500000,
+            'debit' => 15000000,
             'credit' => 0,
         ]);
         // ============================================

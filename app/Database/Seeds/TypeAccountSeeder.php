@@ -37,7 +37,15 @@ class TypeAccountSeeder extends Seeder
             ],
             [
                 'code' => 7,
+                'name' => 'Pendapatan Lainnya',
+            ],
+            [
+                'code' => 8,
                 'name' => 'Beban Lainnya',
+            ],
+            [
+                'code' => 9,
+                'name' => 'Beban Pajak',
             ],
         ];
         $model->insertBatch($data);

@@ -36,11 +36,197 @@
         <div class="col-md-12">
             <div class="main-card mb-3 card">
                 <div class="card-header">
+                    <h3 class="card-title">Data Laporan Neraca</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table my-3 table-sm table-hover table-striped">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th>Akun</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><b>Asset/Harta</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($assets as $asset) : ?>
+                                    <tr>
+                                        <td><?= $asset->code . ' | ' . $asset->name ?></td>
+                                        <td><?= $asset->debit - $asset->credit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total Asset : </b></th>
+                                    <th><?= $asset->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Liability/Kewajiban</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($liabilities as $liability) : ?>
+                                    <tr>
+                                        <td><?= $liability->code . ' | ' . $liability->name ?></td>
+                                        <td><?= $liability->credit - $liability->debit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total Kewajiban : </b></th>
+                                    <th><?= $liability->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Equity/Modal</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($equities as $equity) : ?>
+                                    <tr>
+                                        <td><?= $equity->code . ' | ' . $equity->name ?></td>
+                                        <td><?= $equity->credit - $equity->debit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <td><b>Pendapatan Periode Ini : </b></td>
+                                    <td><?= $revenues[0]->total - $cost_of_sales[0]->total ?></td>
+                                </tr>
+                                <tr>
+                                    <th><b>Total Modal : </b></th>
+                                    <th><?= $equity->total + ($revenues[0]->total - $cost_of_sales[0]->total) ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Balance Sheet</b></th>
+                                    <th><?= $asset->total - ($liability->total + ($equity->total + ($revenues[0]->total - $cost_of_sales[0]->total)))  ?></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-card mb-3 card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Laporan Laba Rugi</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table my-3 table-sm table-hover table-striped">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th>Akun</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th><b>Pendapatan</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($revenues as $revenue) : ?>
+                                    <tr>
+                                        <td><?= $revenue->code . ' | ' . $revenue->name ?></td>
+                                        <td><?= $revenue->credit - $revenue->debit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total : </b></th>
+                                    <th><?= $revenue->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Cost Of Sales</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($cost_of_sales as $cost_of_sale) : ?>
+                                    <tr>
+                                        <td><?= $cost_of_sale->code . ' | ' . $cost_of_sale->name ?></td>
+                                        <td><?= $cost_of_sale->debit - $cost_of_sale->credit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total : </b></th>
+                                    <th><?= $cost_of_sale->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Biaya Operasional</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($operational_expenses as $operational_expense) : ?>
+                                    <tr>
+                                        <td><?= $operational_expense->code . ' | ' . $operational_expense->name ?></td>
+                                        <td><?= $operational_expense->debit - $operational_expense->credit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total : </b></th>
+                                    <th><?= $operational_expense->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Other Income</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($other_incomes as $other_income) : ?>
+                                    <tr>
+                                        <td><?= $other_income->code . ' | ' . $other_income->name ?></td>
+                                        <td><?= $other_income->debit - $other_income->credit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total : </b></th>
+                                    <th><?= $other_income->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Other Income</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($other_expenses as $other_expense) : ?>
+                                    <tr>
+                                        <td><?= $other_expense->code . ' | ' . $other_expense->name ?></td>
+                                        <td><?= $other_expense->debit - $other_expense->credit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total : </b></th>
+                                    <th><?= $other_expense->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Taxes</b></th>
+                                    <th></th>
+                                </tr>
+                                <?php foreach ($taxes as $tax) : ?>
+                                    <tr>
+                                        <td><?= $tax->code . ' | ' . $tax->name ?></td>
+                                        <td><?= $tax->debit - $tax->credit ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                                <tr>
+                                    <th><b>Total : </b></th>
+                                    <th><?= $tax->total ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Total Laba/Rugi</b></th>
+                                    <th><?= $revenues[0]->total - $cost_of_sales[0]->total ?></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-card mb-3 card">
+                <div class="card-header">
                     <h3 class="card-title">Daftar Akun</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table my-3 table-sm table-hover table-striped" id="datatables">
+                        <table class="table my-3 table-sm table-hover table-striped">
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <th width="3%">No</th>
@@ -61,150 +247,6 @@
                                     <td class="text-right"><?= $account->credit ?></td>
                                 </tr>
                                 <?php endforeach ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="main-card mb-3 card">
-                <div class="card-header">
-                    <h3 class="card-title">Data Laporan Neraca</h3>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table my-3 table-sm table-hover table-striped" id="datatables">
-                            <thead class="bg-primary text-white">
-                                <tr>
-                                    <th>Akun</th>
-                                    <th>Saldo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Asset/Harta</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($assets as $asset) : ?>
-                                    <tr>
-                                        <td><?= $asset->code . ' | ' . $asset->name ?></td>
-                                        <td><?= $asset->debit - $asset->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total Asset : </b></th>
-                                    <th>0</th>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Liability/Kewajiban</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($liabilities as $liability) : ?>
-                                    <tr>
-                                        <td><?= $liability->code . ' | ' . $liability->name ?></td>
-                                        <td><?= $liability->debit - $liability->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total Kewajiban : </b></th>
-                                    <th>0</th>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Equity/Modal</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($equities as $equity) : ?>
-                                    <tr>
-                                        <td><?= $equity->code . ' | ' . $equity->name ?></td>
-                                        <td><?= $equity->debit - $equity->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr>
-                                    <td><b>Pendapatan Periode Ini : </b></td>
-                                    <td>312313</td>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total Modal : </b></th>
-                                    <th>0</th>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total Semuanya Harusnya 0 atau Balance</b></th>
-                                    <th>0</th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="main-card mb-3 card">
-                <div class="card-header">
-                    <h3 class="card-title">Data Laporan Laba Rugi</h3>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                    <table class="table my-3 table-sm table-hover table-striped" id="datatables">
-                            <thead class="bg-primary text-white">
-                                <tr>
-                                    <th>Akun</th>
-                                    <th>Saldo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Pendapatan</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($revenues as $revenue) : ?>
-                                    <tr>
-                                        <td><?= $revenue->code . ' | ' . $revenue->name ?></td>
-                                        <td><?= $revenue->debit - $revenue->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total : </b></th>
-                                    <th>0</th>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Cost Of Sales</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($cost_of_sales as $cost_of_sale) : ?>
-                                    <tr>
-                                        <td><?= $cost_of_sale->code . ' | ' . $cost_of_sale->name ?></td>
-                                        <td><?= $cost_of_sale->debit - $cost_of_sale->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total : </b></th>
-                                    <th>0</th>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Equity/Modal</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($operational_expenses as $operational_expense) : ?>
-                                    <tr>
-                                        <td><?= $operational_expense->code . ' | ' . $operational_expense->name ?></td>
-                                        <td><?= $operational_expense->debit - $operational_expense->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total : </b></th>
-                                    <th>0</th>
-                                </tr>
-                                <tr style="color: #fff; background: #0000ff;">
-                                    <th><b>Total Laba/Rugi</b></th>
-                                    <th>0</th>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
