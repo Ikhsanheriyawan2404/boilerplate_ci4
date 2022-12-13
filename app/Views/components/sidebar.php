@@ -139,6 +139,12 @@
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="<?= base_url('report') ?>">
+                    <i class="metismenu-icon pe-7s-display2"></i>
+                    Report
+                </a>
+            </li>
             <li class="app-sidebar__heading">PRO Version</li>
             <li>
                 <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/" target="_blank">

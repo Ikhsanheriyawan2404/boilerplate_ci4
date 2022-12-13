@@ -61,6 +61,11 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('account/datatables', 'Account::datatables');
     $routes->resource('account');
 
+    $routes->get('journal/datatables', 'Journal::datatables');
+    $routes->resource('journal');
+    
+    $routes->get('report', 'Report::index');
+
     $routes->resource('user');
     $routes->resource('group');
     $routes->get('transactions', 'Transaction::index');

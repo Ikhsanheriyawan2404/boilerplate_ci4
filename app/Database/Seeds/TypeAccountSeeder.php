@@ -35,6 +35,10 @@ class TypeAccountSeeder extends Seeder
                 'code' => 6,
                 'name' => 'Operating Revenue/Biaya Operasional',
             ],
+            [
+                'code' => 7,
+                'name' => 'Beban Lainnya',
+            ],
         ];
         $model->insertBatch($data);
     }
