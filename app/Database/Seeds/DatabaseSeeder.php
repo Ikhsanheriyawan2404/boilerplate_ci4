@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
 		$this->call('GroupAccountSeeder');
 		$this->call('SubGroupAccountSeeder');
 		$this->call('AccountSeeder');
+		$this->call('JournalTypeSeeder');
 		$this->call('JournalSeeder');
+		$this->call('BusinessPartnerSeeder');
     }
 }

@@ -10,7 +10,7 @@ class SubGroupAccountSeeder extends Seeder
     public function run()
     {
         $model = new SubGroupAccountModel();
-          $data = [
+        $data = [
             [
                 'group_account_id' => 1,
                 'code' => 1,

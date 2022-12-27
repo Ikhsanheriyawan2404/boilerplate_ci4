@@ -2,9 +2,8 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\I18n\Time;
 use App\Models\AccountModel;
-use App\Models\TypeAccountModel;
+use App\Models\SubGroupAccountModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
@@ -16,12 +15,15 @@ class Account extends BaseController
     public function __construct()
     {
         $this->accounts = new AccountModel();
-        $this->type_accounts = new TypeAccountModel();
+        $this->subgroup_account = new SubGroupAccountModel();
     }
 
     public function datatables()
     {
-        $builder = $this->accounts->select('id, name, description, code, saldo');
+        $builder = $this->accounts
+            ->select('accounts.id, accounts.name, subgroup_account.name as subgroup_name, accounts.code, saldo')
+            ->join('subgroup_account', 'subgroup_account.id = accounts.subgroup_account_id')
+            ->orderBy('code', 'ASC');
         return DataTable::of($builder)
             ->addNumbering('no')
             ->add('action', function ($row) {
@@ -41,33 +43,9 @@ class Account extends BaseController
 
     public function index()
     {
-        $journals = new \App\Models\JournalModel();
-        $transactions = new \App\Models\JournalTransactionModel();
-        $accounts = new \App\Models\AccountModel();
-        
-        // Journal 1 Penambahan Modal Pak Ahmat
-        $journals->insert([
-            'store_id' => 1,
-            'transaction_number' => 'Journal#1001',
-            'date' => Time::now(),
-            'description' => 'Penambahan Modal Awal'
-        ]);
-
-        $data = [
-            'store_id' => 1,
-            'account_code' => '11201',
-            'journal_id' => $journals->getInsertID(),
-            'debit' => 200000000,
-            'credit' => 0,
-        ];
-        $transactions->insert($data);
-        $accounts->where('code', $data['account_code'])->update([
-            'debit' => $data['debit'],
-            'credit' => $data['credit'],
-        ]);
         return view('accounts/index', [
             'title' => 'Akun Master',
-            'type_accounts' => $this->type_accounts->findAll(),
+            'subgroup_accounts' => $this->subgroup_account->findAll(),
         ]);
     }
 
@@ -81,6 +59,7 @@ class Account extends BaseController
     {
         $data = $this->request->getPost();
         $data['id'] = $this->request->getPost('item_id'); 
+        $data['store_id'] = 1; 
         if ($this->accounts->save($data) === false) {
             return $this->respond([
                 'message' => $this->accounts->errors(),

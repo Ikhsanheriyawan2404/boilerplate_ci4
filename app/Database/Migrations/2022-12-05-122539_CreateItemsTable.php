@@ -22,7 +22,7 @@ class CreateItemsTable extends Migration
 				'type'       => 'VARCHAR',
 				'constraint' => '255',
 			],
-			'item_group_id'       => [
+			'group_item_id'       => [
 				'type'       => 'BIGINT',
 				'unsigned' => true,
 			],
@@ -45,7 +45,7 @@ class CreateItemsTable extends Migration
 		]);
 
 		$this->forge->addKey('id', true);
-		$this->forge->addForeignKey('item_group_id', 'item_groups', 'id');
+		$this->forge->addForeignKey('group_item_id', 'group_item', 'id');
 		$this->forge->createTable('items');
     }
 

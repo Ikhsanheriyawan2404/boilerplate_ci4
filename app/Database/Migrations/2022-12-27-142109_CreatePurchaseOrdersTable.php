@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateJournalsTable extends Migration
+class CreatePurchaseOrdersTable extends Migration
 {
     public function up()
     {
@@ -14,45 +14,42 @@ class CreateJournalsTable extends Migration
 				'unsigned'       => true,
 				'auto_increment' => true,
 			],
-			'store_id' => [
+            'store_id' => [
 				'type' => 'BIGINT',
-				'unsigned' => true
+				'unsigned' => true,
 			],
-			'journal_type_id' => [
+			'business_partner_id' => [
 				'type' => 'BIGINT',
-				'unsigned' => true
-			],
-			'transaction_number' => [
-				'type'           => 'VARCHAR',
-				'constraint'       => '255',
+				'unsigned' => true,
 			],
 			'date' => [
 				'type' => 'DATE',
 			],
-			'description' => [
-				'type' => 'TEXT',
-				'null' => true
-			],
-			'file' => [
+            'document' => [
 				'type' => 'VARCHAR',
 				'constraint' => '255',
 				'null' => true
 			],
-			'status' => [
-				'type' => 'ENUM',
-				'constraint' => ['draft', 'final']
+            'description' => [
+				'type' => 'TEXT',
+				'null' => true
 			],
+            'status' => [
+                'type' => 'ENUM',
+                'constraint' => ['draft', 'open', 'paid']
+            ],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
-		$this->forge->addKey('id', true);
+
+        $this->forge->addKey('id', true);
 		$this->forge->addForeignKey('store_id', 'stores', 'id');
-		$this->forge->addForeignKey('journal_type_id', 'journal_type', 'id');
-		$this->forge->createTable('journals');
+		$this->forge->addForeignKey('business_partner_id', 'business_partners', 'id');
+		$this->forge->createTable('purchase_orders');
     }
 
     public function down()
     {
-		$this->forge->dropTable('journals');
+		$this->forge->dropTable('purchase_orders');
     }
 }

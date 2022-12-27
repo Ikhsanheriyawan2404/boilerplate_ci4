@@ -35,8 +35,9 @@ class CreateAccountsTable extends Migration
                 'null' => true
 			],
             'locked'          => [
-				'type'           => 'INT',
-                'default' => 0
+				'type'       => 'ENUM',
+				'constraint' => ['0', '1'],
+				'default' => '0',
 			],
 			'saldo'          => [
 				'type'           => 'DECIMAL',

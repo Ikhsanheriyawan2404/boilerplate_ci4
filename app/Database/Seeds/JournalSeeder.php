@@ -186,6 +186,7 @@ class JournalSeeder extends Seeder
         $journals = new JournalModel();
         $journals->insert([
             'store_id' => 1,
+            'journal_type_id' => random_int(1, 6),
             'transaction_number' => $data['transaction_number'],
             'date' => $data['date'],
             'description' => $data['description']

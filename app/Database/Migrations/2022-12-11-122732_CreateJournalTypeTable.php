@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateItemGroupTables extends Migration
+class CreateJournalTypeTable extends Migration
 {
     public function up()
     {
@@ -14,20 +14,21 @@ class CreateItemGroupTables extends Migration
 				'unsigned'       => true,
 				'auto_increment' => true,
 			],
-			'name'       => [
-				'type'       => 'VARCHAR',
-				'constraint' => '255',
+            'code'          => [
+				'type'           => 'VARCHAR',
+				'constraint'       => '255',
 			],
-			'created_at'       => ['type' => 'datetime', 'null' => true],
-            'updated_at'       => ['type' => 'datetime', 'null' => true],
+            'name'          => [
+				'type'           => 'VARCHAR',
+				'constraint'       => '255',
+			],
 		]);
-
 		$this->forge->addKey('id', true);
-		$this->forge->createTable('item_groups');
+		$this->forge->createTable('journal_type');
     }
 
     public function down()
     {
-        $this->forge->dropTable('item_groups');
+		$this->forge->dropTable('journal_type');
     }
 }

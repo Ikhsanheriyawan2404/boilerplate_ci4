@@ -46,7 +46,7 @@
                                     <th width="3%">No</th>
                                     <th>Kode</th>
                                     <th>Nama</th>
-                                    <th>Deskripsi</th>
+                                    <th>Kategori</th>
                                     <th>Saldo</th>
                                     <th class="text-center"><i class="fa fa-cog"></i></th>
                                 </tr>
@@ -95,7 +95,7 @@ $(document).ready(function() {
             {data: 'no', orderable: false},
             {data: 'code'},
             {data: 'name'},
-            {data: 'description'},
+            {data: 'subgroup_name'},
             {data: 'saldo'},
             {data: 'action', orderable: false},
         ]
@@ -126,7 +126,7 @@ $(document).ready(function() {
             $('#item_id').val(data.id);
             $('#name').val(data.name);
             $('#code').val(data.code);
-            $('#type_account_id').val(data.type_account_id);
+            $('#subgroup_account_id').val(data.subgroup_account_id);
             $('#description').html(data.description);
         })
     });
@@ -190,10 +190,10 @@ $(document).ready(function() {
                         <input type="text" class="form-control form-control-sm mr-2" name="name" id="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="type_account_id">Tipe Akun <span class="text-danger">*</span></label>
-                        <select class="form-control form-control-sm mr-2" name="type_account_id" id="type_account_id">
+                        <label for="subgroup_account_id">Tipe Akun <span class="text-danger">*</span></label>
+                        <select class="form-control form-control-sm mr-2" name="subgroup_account_id" id="subgroup_account_id">
                             <option selected disabled>--Pilih Tipe Akun--</option>
-                            <?php foreach($type_accounts as $value) : ?>
+                            <?php foreach($subgroup_accounts as $value) : ?>
                                 <option value="<?= $value->id ?>"><?= $value->name ?></option>
                             <?php endforeach ?>
                         </select>
