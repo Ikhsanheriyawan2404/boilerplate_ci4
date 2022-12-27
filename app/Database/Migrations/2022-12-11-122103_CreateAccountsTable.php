@@ -18,7 +18,7 @@ class CreateAccountsTable extends Migration
 				'type' => 'BIGINT',
 				'unsigned' => true
 			],
-			'type_account_id'          => [
+			'subgroup_account_id'          => [
 				'type'           => 'BIGINT',
 				'unsigned' => true,
 			],
@@ -40,23 +40,26 @@ class CreateAccountsTable extends Migration
 			],
 			'saldo'          => [
 				'type'           => 'DECIMAL',
-				'constraint' => '15,2'
+				'constraint' => '15,2',
+                'default' => 0,
 			],
 			'credit'          => [
 				'type'           => 'DECIMAL',
-				'constraint' => '15,2'
+				'constraint' => '15,2',
+                'default' => 0,
 			],
 			'debit'          => [
 				'type'           => 'DECIMAL',
-				'constraint' => '15,2'
+				'constraint' => '15,2',
+                'default' => 0,
 			],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->addUniqueKey('code', true);
+		$this->forge->addUniqueKey(['code', 'store_id'], true);
 		$this->forge->addForeignKey('store_id', 'stores', 'id');
-		$this->forge->addForeignKey('type_account_id', 'type_account', 'id');
+		$this->forge->addForeignKey('subgroup_account_id', 'subgroup_account', 'id');
 		$this->forge->createTable('accounts');
     }
 

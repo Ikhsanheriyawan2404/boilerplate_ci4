@@ -17,11 +17,11 @@ class AccountModel extends Model
     protected $allowedFields    = [
         'code',
         'store_id',
+        'subgroup_account_id',
         'name',
         'saldo',
         'description',
         'locked',
-        'type_account_id',
         'credit',
         'debit',
     ];

@@ -21,7 +21,7 @@ class JournalSeeder extends Seeder
             'store_id' => 1,
             'transaction_number' => 'Journal#1001',
             'date' => Time::now(),
-            'description' => 'Penambahan Modal AKhir'
+            'description' => 'Penambahan Modal Awal'
         ]);
 
         $this->saveDetailJournal([
@@ -121,7 +121,7 @@ class JournalSeeder extends Seeder
             'store_id' => 1,
             'transaction_number' => 'Journal#1005',
             'date' => Time::now(),
-            'description' => 'Penjualan Gas Lpg 100 Unit'
+            'description' => 'Penjualan Gas Lpg 100 Unit Secara Kredit'
         ]);
 
         $this->saveDetailJournal([
