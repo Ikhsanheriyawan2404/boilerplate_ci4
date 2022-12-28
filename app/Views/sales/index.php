@@ -10,12 +10,12 @@
                     <i class="fa fa-users icon-gradient bg-happy-itmeo">
                     </i>
                 </div>
-                <div>Data Purchase/Pembelian
+                <div>Data Sales/Penjualan
                     <div class="page-title-subheading">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Pembelian</li>
+                                <li class="breadcrumb-item active" aria-current="page">Penjualan</li>
                             </ol>
                         </nav>
                     </div>
@@ -36,7 +36,7 @@
         <div class="col-md-12">
             <div class="main-card mb-3 card">
                 <div class="card-header">
-                    <h3 class="card-title">Data Pembelian</h3>
+                    <h3 class="card-title">Data Penjualan</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -47,7 +47,7 @@
                                     <th>Tanggal</th>
                                     <th>Description</th>
                                     <th>File</th>
-                                    <th>Vendor</th>
+                                    <th>Customer</th>
                                     <th>Status</th>
                                     <th class="text-center"><i class="fa fa-cog"></i></th>
                                 </tr>
@@ -90,39 +90,39 @@ $(document).ready(function() {
     let table = $('#datatables').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '<?= base_url('purchase/datatables'); ?>',
+        ajax: '<?= base_url('sale/datatables'); ?>',
         order: [],
         columns: [
             {data: 'no', orderable: false},
             {data: 'date'},
             {data: 'description'},
             {data: 'document'},
-            {data: 'vendor'},
+            {data: 'customer'},
             {data: 'status'},
             {data: 'action', orderable: false},
         ]
     });
 
     $('body').on('click', '#showDetails', function() {
-        var purchase_id = $(this).data('id');
+        var sales_id = $(this).data('id');
         $('#modal-md').modal('show');
-        $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/purchase-detail', function(data) {
+        $.get("<?= base_url('sale') ?>" + '/' + sales_id + '/sales-detail', function(data) {
             $.each(data, function (key, value) {
-                $('#purchase_id').val(value.id);
-                $('#purchase_date').html(value.date);
-                $('#purchase_desc').html(value.description);
-                $('tbody#purchase').append(`<tr class="purchase">
+                $('#sales_id').val(value.id);
+                $('#sales_date').html(value.date);
+                $('#sales_desc').html(value.description);
+                $('tbody#sales').append(`<tr class="sales">
                     <td>${value.item_name}</td>
                     <td>${value.qty}</td>
                     <td>${value.total_price}</td>
                 </tr>`);
             })
         })
-        $('tr.purchase').remove();
+        $('tr.sales').remove();
 
-        $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/journal-detail', function(data) {
+        $.get("<?= base_url('sale') ?>" + '/' + sales_id + '/journal-detail', function(data) {
             $.each(data, function (key, value) {
-                $('#purchase_id').val(value.id);
+                $('#sales_id').val(value.id);
                 $('#transaction_number').html(value.transaction_number);
                 $('#journal_date').html(value.date);
                 $('#journal_desc').html(value.description);
@@ -152,10 +152,10 @@ $(document).ready(function() {
                 <div class="row">
                     <div class="col-md-12">
                         <hr>
-                        <h4>Purchase Detail</h4>
+                        <h4>Sales Detail</h4>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Tanggal : <i id="purchase_date"></i></li>
-                            <li class="list-group-item">Description : <i id="purchase_desc"></i></li>
+                            <li class="list-group-item">Tanggal : <i id="sales_date"></i></li>
+                            <li class="list-group-item">Description : <i id="sales_desc"></i></li>
                         </ul>
                     </div>
                 </div>
@@ -167,7 +167,7 @@ $(document).ready(function() {
                             <th>Total</th>
                         </tr>
                     </thead>
-                    <tbody id="purchase">
+                    <tbody id="sales">
 
                     </tbody>
                 </table>

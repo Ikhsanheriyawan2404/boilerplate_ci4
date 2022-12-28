@@ -2,32 +2,32 @@
 
 namespace App\Controllers;
 
-use App\Models\PurchaseOrderModel;
-use CodeIgniter\API\ResponseTrait;
+use App\Models\SalesOrderModel;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
+use CodeIgniter\API\ResponseTrait;
 
-class Purchase extends BaseController
+class Sale extends BaseController
 {
     use ResponseTrait;
     
     public function __construct()
     {
-        $this->purchases = new PurchaseOrderModel();
+        $this->sales = new SalesOrderModel();
     }
 
     public function datatables()
     {
-        $builder = $this->purchases
+        $builder = $this->sales
             ->select('
-                purchase_orders.id,
-                purchase_orders.date,
-                purchase_orders.document,
-                purchase_orders.status,
-                purchase_orders.description,
-                bp.name as vendor
+                sales_orders.id,
+                sales_orders.date,
+                sales_orders.document,
+                sales_orders.status,
+                sales_orders.description,
+                bp.name as customer
             ')
-            ->join('business_partners as bp', 'bp.id = purchase_orders.business_partner_id');
+            ->join('business_partners as bp', 'bp.id = sales_orders.business_partner_id');
 
         return DataTable::of($builder)
             ->addNumbering('no')
@@ -57,21 +57,21 @@ class Purchase extends BaseController
 
     public function index()
     {
-        return view('purchases/index', [
-            'title' => 'Pembelian/Purchase',
+        return view('sales/index', [
+            'title' => 'Penjualan/Sales',
         ]);
     }
 
-    public function purchaseDetail($id = null)
+    public function salesDetail($id = null)
     {
-        $purchase = $this->purchases->findPurchaseDetail($id);
-        return $this->respond($purchase);
+        $sale = $this->sales->findSaleDetail($id);
+        return $this->respond($sale);
     }
 
     public function journalDetail($id = null)
     {
-        $purchase = $this->purchases->find($id);
-        $journal = $this->purchases->findJournalDetail($purchase->journal_id);
+        $sale = $this->sales->find($id);
+        $journal = $this->sales->findJournalDetail($sale->journal_id);
         return $this->respond($journal);
     }
 }

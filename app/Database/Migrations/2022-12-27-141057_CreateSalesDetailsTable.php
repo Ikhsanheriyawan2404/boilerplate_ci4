@@ -26,6 +26,10 @@ class CreateSalesDetailsTable extends Migration
 				'type' => 'DECIMAL',
                 'constraint' => '15,2'
 			],
+			'total_price' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2'
+			],
 		]);
 
         $this->forge->addKey('id', true);

@@ -14,7 +14,7 @@ class SalesDetailModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['sales_order_id', 'qty', 'item_id'];
+    protected $allowedFields    = ['sales_order_id', 'qty', 'item_id', 'total_price'];
 
     // Validation
     protected $validationRules      = [];
