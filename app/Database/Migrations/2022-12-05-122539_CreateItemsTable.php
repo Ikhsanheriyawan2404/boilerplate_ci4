@@ -25,11 +25,24 @@ class CreateItemsTable extends Migration
 			'group_item_id'       => [
 				'type'       => 'BIGINT',
 				'unsigned' => true,
+				'null' => true,
 			],
 			'units'       => [
 				'type'       => 'VARCHAR',
 				'constraint' => '255',
 				'default' => 'pcs'
+			],
+			'purchase_price'       => [
+				'type'       => 'DECIMAL',
+				'constraint' => '15,2',
+			],
+			'selling_price'       => [
+				'type'       => 'DECIMAL',
+				'constraint' => '15,2',
+			],
+			'stock'       => [
+				'type'       => 'DECIMAL',
+				'constraint' => '15,2',
 			],
 			'description' => [
 				'type'       => 'TEXT',

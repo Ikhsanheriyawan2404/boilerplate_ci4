@@ -14,7 +14,7 @@ class PurchaseDetailModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['purchase_order_id', 'qty', 'item_id'];
+    protected $allowedFields    = ['purchase_order_id', 'qty', 'item_id', 'total_price'];
 
     // Validation
     protected $validationRules      = [];

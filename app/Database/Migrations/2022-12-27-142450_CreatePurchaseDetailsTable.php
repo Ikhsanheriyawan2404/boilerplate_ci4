@@ -14,7 +14,7 @@ class CreatePurchaseDetailsTable extends Migration
 				'unsigned'       => true,
 				'auto_increment' => true,
 			],
-            'sales_order_id' => [
+            'purchase_order_id' => [
 				'type' => 'BIGINT',
 				'unsigned' => true,
 			],
@@ -26,10 +26,14 @@ class CreatePurchaseDetailsTable extends Migration
 				'type' => 'DECIMAL',
                 'constraint' => '15,2'
 			],
+			'total_price' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2'
+			],
 		]);
 
         $this->forge->addKey('id', true);
-		$this->forge->addForeignKey('sales_order_id', 'sales_orders', 'id');
+		$this->forge->addForeignKey('purchase_order_id', 'purchase_orders', 'id');
 		$this->forge->addForeignKey('item_id', 'items', 'id');
 		$this->forge->createTable('purchase_details');
     }

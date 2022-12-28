@@ -18,6 +18,11 @@ class CreatePurchaseOrdersTable extends Migration
 				'type' => 'BIGINT',
 				'unsigned' => true,
 			],
+			'journal_id' => [
+				'type' => 'BIGINT',
+				'unsigned' => true,
+				'null' => true,
+			],
 			'business_partner_id' => [
 				'type' => 'BIGINT',
 				'unsigned' => true,
@@ -45,6 +50,7 @@ class CreatePurchaseOrdersTable extends Migration
         $this->forge->addKey('id', true);
 		$this->forge->addForeignKey('store_id', 'stores', 'id');
 		$this->forge->addForeignKey('business_partner_id', 'business_partners', 'id');
+		$this->forge->addForeignKey('journal_id', 'journals', 'id');
 		$this->forge->createTable('purchase_orders');
     }
 

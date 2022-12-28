@@ -63,6 +63,14 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
 
     $routes->get('journal/datatables', 'Journal::datatables');
     $routes->resource('journal');
+
+    $routes->get('journal/datatables', 'Journal::datatables');
+    $routes->resource('journal');
+
+    $routes->get('purchase/datatables', 'Purchase::datatables');
+    $routes->get('purchase/(:any)/purchase-detail', 'Purchase::purchaseDetail/$1');
+    $routes->get('purchase/(:any)/journal-detail', 'Purchase::journalDetail/$1');
+    $routes->resource('purchase');
     
     $routes->get('report', 'Report::index');
 

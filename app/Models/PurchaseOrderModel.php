@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
+use Config\Database;
 use CodeIgniter\Model;
 
 class PurchaseOrderModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'purchaseorders';
+    protected $table            = 'purchase_orders';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'store_id',
+        'journal_id',
         'business_partner_id',
         'date',
         'document',
@@ -35,4 +37,34 @@ class PurchaseOrderModel extends Model
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
+
+    public function findPurchaseDetail($id)
+    {
+        $db = Database::connect();
+        $builder = $db->table('purchase_details as pd');
+        return $builder->select('
+            pd.id, pd.qty, pd.item_id, pd.total_price,
+            items.name as item_name,
+            po.date, po.description')
+            ->where('purchase_order_id', $id)
+            ->where('pd.purchase_order_id', $id)
+            ->join('purchase_orders as po', 'pd.purchase_order_id = po.id')
+            ->join('items', 'items.id = pd.item_id')
+            ->get()->getResultObject();
+    }
+
+    public function findJournalDetail($id)
+    {
+        $db = Database::connect();
+        $builder = $db->table('journal_transactions as jt');
+        return $builder->select('
+            jt.id, jt.credit, jt.debit, jt.account_code,
+            journals.transaction_number,
+            journals.date,
+            journals.description')
+            ->where('journal_id', $id)
+            ->where('jt.journal_id', $id)
+            ->join('journals', 'jt.journal_id = journals.id')
+            ->get()->getResultObject();
+    }
 }

@@ -14,7 +14,13 @@ class ItemModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['item_code', 'name', 'selling_price', 'purchase_price'];
+    protected $allowedFields    = [
+        'item_code',
+        'name', 'selling_price', 'purchase_price', 'description', 'stock',
+        'image',
+        'units',
+        'group_item_id'
+    ];
 
     // Dates
     protected $useTimestamps = false;

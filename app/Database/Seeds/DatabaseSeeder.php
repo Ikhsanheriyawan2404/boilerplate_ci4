@@ -20,5 +20,7 @@ class DatabaseSeeder extends Seeder
 		$this->call('JournalTypeSeeder');
 		$this->call('JournalSeeder');
 		$this->call('BusinessPartnerSeeder');
+		$this->call('ItemSeeder');
+		$this->call('PurchaseOrderSeeder');
     }
 }
