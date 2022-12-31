@@ -5,7 +5,7 @@ namespace App\Database\Seeds;
 use CodeIgniter\I18n\Time;
 use CodeIgniter\Database\Seeder;
 use App\Models\JournalTransactionModel;
-use App\Models\{JournalModel, AccountModel};
+use App\Models\{JournalModel};
 
 class JournalSeeder extends Seeder
 {
@@ -14,12 +14,13 @@ class JournalSeeder extends Seeder
         $bankBRI = '10002';
         $kas = '10001';
         $modal = '31000';
-        $persedianBarang = '10300';
-        $pendapatan = '41000';
+        $biayaKaryawan = '61000';
+        $biayaListrik = '61700';
 
         $journalId = $this->saveJournal([
             'store_id' => 1,
-            'transaction_number' => 'Journal#1001',
+            'transaction_number' => 'JournalUmum#1001',
+            'journal_type_id' => 5,
             'date' => Time::now(),
             'description' => 'Penambahan Modal Awal'
         ]);
@@ -50,7 +51,8 @@ class JournalSeeder extends Seeder
         // ============================================
         $journalId = $this->saveJournal([
             'store_id' => 1,
-            'transaction_number' => 'Journal#1002',
+            'transaction_number' => 'JournalUmum#1002',
+            'journal_type_id' => 5,
             'date' => Time::now(),
             'description' => 'Pembelian Perlengkapan Kantor'
         ]);
@@ -70,35 +72,13 @@ class JournalSeeder extends Seeder
             'debit' => 0,
             'credit' => 15000000,
         ]);
-        // ============================================
+        // ====================================================
         $journalId = $this->saveJournal([
             'store_id' => 1,
-            'transaction_number' => 'Journal#1003',
+            'transaction_number' => 'JournalUmum#1003',
+            'journal_type_id' => 5,
             'date' => Time::now(),
-            'description' => 'Pembelian Produk Lpg 100 unit'
-        ]);
-
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => '21000',
-            'journal_id' => $journalId,
-            'debit' => 0,
-            'credit' => 15000000,
-        ]);
-
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $persedianBarang,
-            'journal_id' => $journalId,
-            'debit' => 15000000,
-            'credit' => 0,
-        ]);
-        // ============================================
-        $journalId = $this->saveJournal([
-            'store_id' => 1,
-            'transaction_number' => 'Journal#1004',
-            'date' => Time::now(),
-            'description' => 'Pembayaran Hutang Usaha Gas Lpg 100 Unit'
+            'description' => 'Beban Gaji Karyawan'
         ]);
 
         $this->saveDetailJournal([
@@ -111,74 +91,35 @@ class JournalSeeder extends Seeder
 
         $this->saveDetailJournal([
             'store_id' => 1,
-            'account_code' => '21000',
+            'account_code' => $biayaKaryawan,
             'journal_id' => $journalId,
             'debit' => 15000000,
             'credit' => 0,
         ]);
-        // ============================================
+        // ===============================
         $journalId = $this->saveJournal([
             'store_id' => 1,
-            'transaction_number' => 'Journal#1005',
+            'transaction_number' => 'JournalUmum#1004',
+            'journal_type_id' => 5,
             'date' => Time::now(),
-            'description' => 'Penjualan Gas Lpg 100 Unit Secara Kredit'
-        ]);
-
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => '10301',
-            'journal_id' => $journalId,
-            'debit' => 16000000,
-            'credit' => 0,
-        ]);
-
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $pendapatan,
-            'journal_id' => $journalId,
-            'debit' => 0,
-            'credit' => 16000000,
-        ]);
-
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => '51000',
-            'journal_id' => $journalId,
-            'debit' => 15000000,
-            'credit' => 0,
-        ]);
-
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $persedianBarang,
-            'journal_id' => $journalId,
-            'debit' => 0,
-            'credit' => 15000000,
-        ]);
-        // ============================================
-        $journalId = $this->saveJournal([
-            'store_id' => 1,
-            'transaction_number' => 'Journal#1006',
-            'date' => Time::now(),
-            'description' => 'Pembayaran Piutang Pelanggan suka ngutang Gas Lpg 100 Unit'
+            'description' => 'Biaya Listrik'
         ]);
 
         $this->saveDetailJournal([
             'store_id' => 1,
             'account_code' => $bankBRI,
             'journal_id' => $journalId,
-            'debit' => 15000000,
-            'credit' => 0,
+            'debit' => 0,
+            'credit' => 500000,
         ]);
 
         $this->saveDetailJournal([
             'store_id' => 1,
-            'account_code' => '10301',
+            'account_code' => $biayaListrik,
             'journal_id' => $journalId,
-            'debit' => 0,
-            'credit' => 15000000,
+            'debit' => 500000,
+            'credit' => 0,
         ]);
-        // ============================================
     }
 
     public function saveJournal(array $data) : int
@@ -186,7 +127,7 @@ class JournalSeeder extends Seeder
         $journals = new JournalModel();
         $journals->insert([
             'store_id' => 1,
-            'journal_type_id' => random_int(1, 6),
+            'journal_type_id' => $data['journal_type_id'] ?? random_int(1, 6),
             'transaction_number' => $data['transaction_number'],
             'date' => $data['date'],
             'description' => $data['description']

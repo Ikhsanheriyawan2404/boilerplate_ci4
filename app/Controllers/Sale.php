@@ -21,7 +21,7 @@ class Sale extends BaseController
         $builder = $this->sales
             ->select('
                 sales_orders.id,
-                sales_orders.date,
+                sales_orders.transaction_date as date,
                 sales_orders.document,
                 sales_orders.status,
                 sales_orders.description,

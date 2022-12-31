@@ -2,8 +2,8 @@
 
 namespace App\Database\Seeds;
 
+use Carbon\Carbon;
 use App\Models\ItemModel;
-use CodeIgniter\I18n\Time;
 use App\Models\JournalModel;
 use CodeIgniter\Database\Seeder;
 use App\Models\PurchaseOrderModel;
@@ -14,17 +14,19 @@ class PurchaseOrderSeeder extends Seeder
 {
     protected $bankBRI = '10002';
     protected $kas = '10001';
-    protected $modal = '31000';
-    protected $persedianBarang = '10300';
-    protected $pendapatan = '41000';
+    protected $hutangUsaha = '21000';
+    protected $persediaanLpg = '10301';
+    protected $persediaanTabung = '10302';
 
     public function run()
     {   
         $purchaseId = $this->storePurchase([
             'document' => null,
             'status' => 'paid',
-            'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan Isinya'
+            'transaction_date' => Carbon::now()->subdays(2),
+            'overdue_date' => Carbon::now(),
+            'payment_date' => Carbon::now(),
+            'description' => 'Pembelian Tabung LPG 30 units dan Isi 90kg'
         ]);
 
         $result1 = $this->storePurchaseDetails([
@@ -44,22 +46,31 @@ class PurchaseOrderSeeder extends Seeder
         $journalId = $this->storeJournal([
             'store_id' => 1,
             'purchase_order_id' => $purchaseId,
-            'transaction_number' => 'Journal#1004',
-            'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan isinya'
+            'journal_type_id' => 1,
+            'transaction_number' => 'JournalPembelian#1001',
+            'date' => Carbon::now()->subdays(2),
+            'description' => 'Pembelian Tabung LPG 30 units dan Isi 90kg'
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
-            'account_code' => $this->persedianBarang,
+            'account_code' => $this->persediaanTabung,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'] + $result2['total_price'],
+            'debit' => $result1['total_price'],
             'credit' => 0,
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
-            'account_code' => $this->bankBRI,
+            'account_code' => $this->persediaanLpg,
+            'journal_id' => $journalId,
+            'debit' => $result2['total_price'],
+            'credit' => 0,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->hutangUsaha,
             'journal_id' => $journalId,
             'debit' => 0,
             'credit' => $result1['total_price'] + $result2['total_price'],
@@ -68,14 +79,15 @@ class PurchaseOrderSeeder extends Seeder
         $journalId = $this->storeJournal([
             'store_id' => 1,
             'purchase_order_id' => $purchaseId,
-            'transaction_number' => 'Journal#1005',
-            'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan isinya'
+            'journal_type_id' => 4,
+            'transaction_number' => 'JournalKasPengeluaran#1001',
+            'date' => Carbon::now(),
+            'description' => 'Pembayaran Tabung LPG 30 units dan Isi 90kg'
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
-            'account_code' => $this->persedianBarang,
+            'account_code' => $this->hutangUsaha,
             'journal_id' => $journalId,
             'debit' => $result1['total_price'] + $result2['total_price'],
             'credit' => 0,
@@ -93,37 +105,48 @@ class PurchaseOrderSeeder extends Seeder
         $purchaseId = $this->storePurchase([
             'document' => null,
             'status' => 'paid',
-            'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan Isinya'
+            'transaction_date' => Carbon::now()->subdays(10),
+            'overdue_date' => Carbon::now()->subdays(10),
+            'payment_date' => Carbon::now()->subdays(10),
+            'description' => 'Pembelian Kas Tabung LPG 50 units dan Isi 150kg'
         ]);
 
         $journalId = $this->storeJournal([
             'store_id' => 1,
+            'journal_type_id' => 4,
             'purchase_order_id' => $purchaseId,
-            'transaction_number' => 'JournalPembelian#1007',
-            'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan isinya'
+            'transaction_number' => 'JournalKasPengeluaran#1007',
+            'date' => Carbon::now()->subdays(10),
+            'description' => 'Pembelian Kas Tabung LPG 50 units dan Isi 150kg'
         ]);
 
         $result1 = $this->storePurchaseDetails([
             'purchase_order_id' => $purchaseId,
-            'qty' => 30,
+            'qty' => 50,
             'item_id' => 1,
-            'total_price' => 110000 * 30,
+            'total_price' => 110000 * 50,
         ]);
 
         $result2 = $this->storePurchaseDetails([
             'purchase_order_id' => $purchaseId,
-            'qty' => 90,
+            'qty' => 150,
             'item_id' => 2,
-            'total_price' => 15000 * 90,
+            'total_price' => 15000 * 150,
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
-            'account_code' => $this->persedianBarang,
+            'account_code' => $this->persediaanTabung,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'] + $result2['total_price'],
+            'debit' => $result1['total_price'],
+            'credit' => 0,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->persediaanLpg,
+            'journal_id' => $journalId,
+            'debit' => $result2['total_price'],
             'credit' => 0,
         ]);
 
@@ -135,6 +158,132 @@ class PurchaseOrderSeeder extends Seeder
             'credit' => $result1['total_price'] + $result2['total_price'],
         ]);
         // ====================================================================
+        $purchaseId = $this->storePurchase([
+            'document' => null,
+            'status' => 'paid',
+            'transaction_date' => Carbon::now(),
+            'overdue_date' => Carbon::now(),
+            'payment_date' => Carbon::now(),
+            'description' => 'Pembelian Isi Lpg 20 units = 60kg'
+        ]);
+
+        $journalId = $this->storeJournal([
+            'store_id' => 1,
+            'journal_type_id' => 4,
+            'purchase_order_id' => $purchaseId,
+            'transaction_number' => 'JournalKasPengeluaran#1008',
+            'date' => Carbon::now(),
+            'description' => 'Pembelian Kas Isi Lpg 20 units = 60kg'
+        ]);
+
+        $result2 = $this->storePurchaseDetails([
+            'purchase_order_id' => $purchaseId,
+            'qty' => 60,
+            'item_id' => 2,
+            'total_price' => 15000 * 60,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->persediaanLpg,
+            'journal_id' => $journalId,
+            'debit' => $result2['total_price'],
+            'credit' => 0,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->bankBRI,
+            'journal_id' => $journalId,
+            'debit' => 0,
+            'credit' => $result2['total_price'],
+        ]);
+
+        // =============================================
+
+        $purchaseId = $this->storePurchase([
+            'document' => null,
+            'status' => 'paid',
+            'transaction_date' => Carbon::now(),
+            'overdue_date' => Carbon::now(),
+            'payment_date' => Carbon::now(),
+            'description' => 'Pembelian Isi Lpg 20 units = 60kg'
+        ]);
+
+        $journalId = $this->storeJournal([
+            'store_id' => 1,
+            'journal_type_id' => 4,
+            'purchase_order_id' => $purchaseId,
+            'transaction_number' => 'JournalKasPengeluaran#1009',
+            'date' => Carbon::now(),
+            'description' => 'Pembelian Kas Isi Lpg 20 units = 60kg'
+        ]);
+
+        $result2 = $this->storePurchaseDetails([
+            'purchase_order_id' => $purchaseId,
+            'qty' => 60,
+            'item_id' => 2,
+            'total_price' => 15000 * 60,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->persediaanLpg,
+            'journal_id' => $journalId,
+            'debit' => $result2['total_price'],
+            'credit' => 0,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->bankBRI,
+            'journal_id' => $journalId,
+            'debit' => 0,
+            'credit' => $result2['total_price'],
+        ]);
+
+        // ====================================================================
+
+        $purchaseId = $this->storePurchase([
+            'document' => null,
+            'status' => 'open',
+            'transaction_date' => Carbon::now(),
+            'overdue_date' => Carbon::now(),
+            'payment_date' => Carbon::now(),
+            'description' => 'Pembelian Isi Lpg 30 units = 90kg'
+        ]);
+
+        $journalId = $this->storeJournal([
+            'store_id' => 1,
+            'journal_type_id' => 1,
+            'purchase_order_id' => $purchaseId,
+            'transaction_number' => 'JournalPembelian#1008',
+            'date' => Carbon::now(),
+            'description' => 'Pembelian Isi Lpg 30 units = 90kg'
+        ]);
+
+        $result2 = $this->storePurchaseDetails([
+            'purchase_order_id' => $purchaseId,
+            'qty' => 90,
+            'item_id' => 2,
+            'total_price' => 15000 * 90,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->persediaanLpg,
+            'journal_id' => $journalId,
+            'debit' => $result2['total_price'],
+            'credit' => 0,
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->hutangUsaha,
+            'journal_id' => $journalId,
+            'debit' => 0,
+            'credit' => $result2['total_price'],
+        ]);
     }
 
     public function storePurchase(array $data) : int
@@ -145,7 +294,9 @@ class PurchaseOrderSeeder extends Seeder
             'store_id' => 1,
             'document' => $data['document'],
             'status' => $data['status'],
-            'date' => $data['date'],
+            'transaction_date' => $data['transaction_date'],
+            'overdue_date' => $data['overdue_date'],
+            'payment_date' => $data['payment_date'],
             'description' => $data['description']
         ]);
 
@@ -177,7 +328,7 @@ class PurchaseOrderSeeder extends Seeder
         $journals = new JournalModel();
         $journals->insert([
             'store_id' => 1,
-            'journal_type_id' => random_int(1, 6),
+            'journal_type_id' => $data['journal_type_id'] ?? random_int(1, 6),
             'purchase_order_id' => $data['purchase_order_id'],
             'transaction_number' => $data['transaction_number'],
             'date' => $data['date'],

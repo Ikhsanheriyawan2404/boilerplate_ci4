@@ -22,7 +22,7 @@ class Purchase extends BaseController
         $builder = $this->purchases
             ->select('
                 purchase_orders.id,
-                purchase_orders.date,
+                purchase_orders.transaction_date as date,
                 purchase_orders.document,
                 purchase_orders.status,
                 purchase_orders.description,

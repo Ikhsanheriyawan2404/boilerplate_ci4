@@ -22,8 +22,15 @@ class CreateSalesOrdersTable extends Migration
 				'type' => 'BIGINT',
 				'unsigned' => true,
 			],
-			'date' => [
+			'transaction_date' => [
 				'type' => 'DATE',
+			],
+			'overdue_date' => [
+				'type' => 'DATE',
+			],
+			'payment_date' => [
+				'type' => 'DATE',
+				'null' => true
 			],
             'document' => [
 				'type' => 'VARCHAR',

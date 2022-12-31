@@ -2,8 +2,8 @@
 
 namespace App\Database\Seeds;
 
+use Carbon\Carbon;
 use App\Models\ItemModel;
-use CodeIgniter\I18n\Time;
 use App\Models\JournalModel;
 use App\Models\SalesOrderModel;
 use App\Models\SalesDetailModel;
@@ -14,25 +14,30 @@ class SalesOrderSeeder extends Seeder
 {
     protected $bankBRI = '10002';
     protected $kas = '10001';
-    protected $modal = '31000';
-    protected $persedianBarang = '10300';
-    protected $pendapatan = '41000';
+    protected $persediaanLpg = '10301';
+    protected $persediaanTabung = '10302';
+    protected $pendapatanLpg = '41000';
+    protected $pendapatanTabung = '41100';
+    protected $hppLpg = '51000';
+    protected $hppTabung = '51100';
 
     public function run()
     {   
         $saleId = $this->storeSales([
             'document' => null,
             'status' => 'paid',
-            'date' => Time::now(),
-            'description' => 'Penjualan Barang Tabu7ng Gas LPG 3kg dan Isinya'
+            'transaction_date' => Carbon::now()->subDays(2),
+            'overdue_date' => Carbon::now(),
+            'payment_date' => Carbon::now(),
+            'description' => 'Penjualan Barang Tabung Gas LPG 3kg dan Isinya 30 units dan 90 kg'
         ]);
 
         $journalId = $this->storeJournal([
             'store_id' => 1,
             'sales_order_id' => $saleId,
-            'transaction_number' => 'Journal#1004',
-            'date' => Time::now(),
-            'description' => 'Penjualan Barang Tabu7ng Gas LPG 3kg dan isinya'
+            'transaction_number' => 'JournalPenerimaanKas#1001',
+            'date' => Carbon::now(),
+            'description' => 'Penjualan Barang Tabung Gas LPG 3kg dan isinya'
         ]);
 
         $result1 = $this->storeSalesDetails([
@@ -51,18 +56,58 @@ class SalesOrderSeeder extends Seeder
 
         $this->storeDetailJournal([
             'store_id' => 1,
-            'account_code' => $this->persedianBarang,
+            'account_code' => $this->persediaanTabung,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'] + $result2['total_price'],
-            'credit' => 0,
+            'debit' => 0,
+            'credit' => $result1['total_price'],
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
-            'account_code' => $this->bankBRI,
+            'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result1['total_price'] + $result2['total_price'],
+            'credit' => $result2['total_price'],
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->pendapatanTabung,
+            'journal_id' => $journalId,
+            'debit' => 0,
+            'credit' => $result1['total_price'],
+        ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->pendapatanLpg,
+            'journal_id' => $journalId,
+            'debit' => 0,
+            'credit' => $result2['total_price'],
+        ]);
+
+        // $this->storeDetailJournal([
+        //     'store_id' => 1,
+        //     'account_code' => $this->hppTabung,
+        //     'journal_id' => $journalId,
+        //     'debit' => $result2['total_price'],
+        //     'credit' => 0,
+        // ]);
+
+        // $this->storeDetailJournal([
+        //     'store_id' => 1,
+        //     'account_code' => $this->hppLpg,
+        //     'journal_id' => $journalId,
+        //     'debit' => $result2['total_price'],
+        //     'credit' => 0,
+        // ]);
+
+        $this->storeDetailJournal([
+            'store_id' => 1,
+            'account_code' => $this->kas,
+            'journal_id' => $journalId,
+            'debit' => $result1['total_price'] + $result2['total_price'],
+            'credit' => 0,
         ]);
     }
 
@@ -74,7 +119,9 @@ class SalesOrderSeeder extends Seeder
             'store_id' => 1,
             'document' => $data['document'],
             'status' => $data['status'],
-            'date' => $data['date'],
+            'transaction_date' => $data['transaction_date'],
+            'overdue_date' => $data['overdue_date'],
+            'payment_date' => $data['payment_date'],
             'description' => $data['description']
         ]);
 

@@ -18,7 +18,9 @@ class Journal extends BaseController
 
     public function datatables()
     {
-        $builder = $this->journals->select('id, date, transaction_number, file, description');
+        $builder = $this->journals
+            ->select('id, date, transaction_number, file, description');
+            
         return DataTable::of($builder)
             ->addNumbering('no')
             ->add('action', function ($row) {

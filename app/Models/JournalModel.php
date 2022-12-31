@@ -45,12 +45,14 @@ class JournalModel extends Model
         $builder = $db->table('journal_transactions as jt');
         return $builder->select('
             jt.id, jt.credit, jt.debit, jt.account_code,
+            accounts.name,
             journals.transaction_number,
             journals.date,
             journals.description')
             ->where('journal_id', $id)
             ->where('jt.journal_id', $id)
             ->join('journals', 'jt.journal_id = journals.id')
+            ->join('accounts', 'jt.account_code = accounts.code')
             ->get()->getResultObject();
     }
 }

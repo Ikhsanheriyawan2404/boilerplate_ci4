@@ -18,7 +18,9 @@ class SalesOrderModel extends Model
     protected $allowedFields    = [
         'store_id',
         'business_partner_id',
-        'date',
+        'transaction_date',
+        'overdue_date',
+        'payment_date',
         'document',
         'status',
         'description'

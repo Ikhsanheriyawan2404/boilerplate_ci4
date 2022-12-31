@@ -111,7 +111,7 @@ $(document).ready(function() {
                 $('#date').html(value.date);
                 $('#description').html(value.description);
                 $('tbody#modal').append(`<tr class="products">
-                    <td>${value.account_code}</td>
+                    <td>${value.account_code}|${value.name}</td>
                     <td>${value.debit}</td>
                     <td>${value.credit}</td>
                 </tr>`);
