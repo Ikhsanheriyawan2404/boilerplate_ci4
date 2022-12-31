@@ -21,11 +21,21 @@ class Account extends BaseController
     public function datatables()
     {
         $builder = $this->accounts
-            ->select('accounts.id, accounts.name, subgroup_account.name as subgroup_name, accounts.code, saldo')
+            ->select('
+                accounts.id, accounts.name, accounts.code,
+                subgroup_account.name as subgroup_name,
+                SUM(jt.debit - jt.credit) as saldo
+            ')
             ->join('subgroup_account', 'subgroup_account.id = accounts.subgroup_account_id')
-            ->orderBy('code', 'ASC');
+            ->join('journal_transactions as jt', 'jt.account_code = accounts.code', 'left')
+            ->orderBy('code', 'ASC')
+            ->groupBy('accounts.id');
+            
         return DataTable::of($builder)
             ->addNumbering('no')
+            ->edit('saldo', function ($row) {
+                return $row->saldo === null ? 0 : number_format($row->saldo);
+            })
             ->add('action', function ($row) {
                 $btn = '<td class="text-center">
                     <div class="dropdown d-inline-block">

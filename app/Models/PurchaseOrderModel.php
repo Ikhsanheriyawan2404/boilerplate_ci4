@@ -17,7 +17,6 @@ class PurchaseOrderModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'store_id',
-        'journal_id',
         'business_partner_id',
         'date',
         'document',
@@ -56,15 +55,17 @@ class PurchaseOrderModel extends Model
     public function findJournalDetail($id)
     {
         $db = Database::connect();
-        $builder = $db->table('journal_transactions as jt');
+        $builder = $db->table('journals');
         return $builder->select('
+            accounts.name,
             jt.id, jt.credit, jt.debit, jt.account_code,
-            journals.transaction_number,
-            journals.date,
+            transaction_number,
+            date,
             journals.description')
-            ->where('journal_id', $id)
-            ->where('jt.journal_id', $id)
-            ->join('journals', 'jt.journal_id = journals.id')
+            ->where('purchase_order_id', $id)
+            ->join('journal_transactions as jt', 'jt.journal_id = journals.id')
+            ->join('accounts', 'jt.account_code = accounts.code')
             ->get()->getResultObject();
+        
     }
 }

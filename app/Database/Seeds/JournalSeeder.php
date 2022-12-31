@@ -11,8 +11,8 @@ class JournalSeeder extends Seeder
 {
     public function run()
     {
-        $bankBRI = '11201';
-        $kas = '11000';
+        $bankBRI = '10002';
+        $kas = '10001';
         $modal = '31000';
         $persedianBarang = '10300';
         $pendapatan = '41000';
@@ -126,7 +126,7 @@ class JournalSeeder extends Seeder
 
         $this->saveDetailJournal([
             'store_id' => 1,
-            'account_code' => '11301',
+            'account_code' => '10301',
             'journal_id' => $journalId,
             'debit' => 16000000,
             'credit' => 0,
@@ -173,7 +173,7 @@ class JournalSeeder extends Seeder
 
         $this->saveDetailJournal([
             'store_id' => 1,
-            'account_code' => '11301',
+            'account_code' => '10301',
             'journal_id' => $journalId,
             'debit' => 0,
             'credit' => 15000000,
@@ -198,7 +198,6 @@ class JournalSeeder extends Seeder
     public function saveDetailJournal(array $array)
     {
         $transactions = new JournalTransactionModel();
-        $accounts = new AccountModel();
         $data = [
             'store_id' => $array['store_id'],
             'account_code' => $array['account_code'],
@@ -207,10 +206,5 @@ class JournalSeeder extends Seeder
             'credit' => $array['credit'],
         ];
         $transactions->insert($data);
-        $account = $accounts->where('code', $data['account_code'])->first();
-        $accounts->update($account->id, [
-            'debit' => $account->debit + $data['debit'],
-            'credit' => $account->credit + $data['credit'],
-        ]);
     }
 }

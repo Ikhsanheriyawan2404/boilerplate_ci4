@@ -46,6 +46,7 @@
                                     <th width="3%">No</th>
                                     <th>Code</th>
                                     <th>Name</th>
+                                    <th>Stock</th>
                                     <th>Harga Jual</th>
                                     <th>Harga Beli</th>
                                     <th class="text-center"><i class="fa fa-cog"></i></th>
@@ -95,6 +96,7 @@ $(document).ready(function() {
             {data: 'no', orderable: false},
             {data: 'item_code'},
             {data: 'name'},
+            {data: 'stock'},
             {data: 'selling_price'},
             {data: 'purchase_price'},
             {data: 'action', orderable: false},

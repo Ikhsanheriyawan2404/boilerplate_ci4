@@ -18,7 +18,7 @@ class Item extends BaseController
 
     public function datatables()
     {
-        $builder = $this->items->select('id, name, item_code, purchase_price, selling_price');
+        $builder = $this->items->select('id, name, item_code, stock, purchase_price, selling_price');
         return DataTable::of($builder)
             ->addNumbering('no')
             ->add('action', function ($row) {

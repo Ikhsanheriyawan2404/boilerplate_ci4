@@ -39,21 +39,21 @@ class CreateAccountsTable extends Migration
 				'constraint' => ['0', '1'],
 				'default' => '0',
 			],
-			'saldo'          => [
-				'type'           => 'DECIMAL',
-				'constraint' => '15,2',
-                'default' => 0,
-			],
-			'credit'          => [
-				'type'           => 'DECIMAL',
-				'constraint' => '15,2',
-                'default' => 0,
-			],
-			'debit'          => [
-				'type'           => 'DECIMAL',
-				'constraint' => '15,2',
-                'default' => 0,
-			],
+			// 'saldo'          => [
+			// 	'type'           => 'DECIMAL',
+			// 	'constraint' => '15,2',
+            //     'default' => 0,
+			// ],
+			// 'credit'          => [
+			// 	'type'           => 'DECIMAL',
+			// 	'constraint' => '15,2',
+            //     'default' => 0,
+			// ],
+			// 'debit'          => [
+			// 	'type'           => 'DECIMAL',
+			// 	'constraint' => '15,2',
+            //     'default' => 0,
+			// ],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);

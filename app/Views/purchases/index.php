@@ -86,61 +86,77 @@
 <script src="<?= base_url('template') ?>/plugins/toastr/toastr.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    let table = $('#datatables').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '<?= base_url('purchase/datatables'); ?>',
-        order: [],
-        columns: [
-            {data: 'no', orderable: false},
-            {data: 'date'},
-            {data: 'description'},
-            {data: 'document'},
-            {data: 'vendor'},
-            {data: 'status'},
-            {data: 'action', orderable: false},
-        ]
-    });
+    $(document).ready(function() {
+        let table = $('#datatables').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '<?= base_url('purchase/datatables'); ?>',
+            order: [],
+            columns: [{
+                    data: 'no',
+                    orderable: false
+                },
+                {
+                    data: 'date'
+                },
+                {
+                    data: 'description'
+                },
+                {
+                    data: 'document'
+                },
+                {
+                    data: 'vendor'
+                },
+                {
+                    data: 'status'
+                },
+                {
+                    data: 'action',
+                    orderable: false
+                },
+            ]
+        });
 
-    $('body').on('click', '#showDetails', function() {
-        var purchase_id = $(this).data('id');
-        $('#modal-md').modal('show');
-        $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/purchase-detail', function(data) {
-            $.each(data, function (key, value) {
-                $('#purchase_id').val(value.id);
-                $('#purchase_date').html(value.date);
-                $('#purchase_desc').html(value.description);
-                $('tbody#purchase').append(`<tr class="purchase">
+        $('body').on('click', '#showDetails', function() {
+            var purchase_id = $(this).data('id');
+            $('#modal-lg').modal('show');
+            $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/purchase-detail', function(data) {
+                $.each(data, function(key, value) {
+                    $('#purchase_id').val(value.id);
+                    $('#purchase_date').html(value.date);
+                    $('#purchase_desc').html(value.description);
+                    $('tbody#purchase').append(`<tr class="purchase">
                     <td>${value.item_name}</td>
                     <td>${value.qty}</td>
                     <td>${value.total_price}</td>
                 </tr>`);
+                })
             })
-        })
-        $('tr.purchase').remove();
+            $('tr.purchase').remove();
 
-        $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/journal-detail', function(data) {
-            $.each(data, function (key, value) {
-                $('#purchase_id').val(value.id);
-                $('#transaction_number').html(value.transaction_number);
-                $('#journal_date').html(value.date);
-                $('#journal_desc').html(value.description);
-                $('tbody#journal').append(`<tr class="journal">
-                    <td>${value.account_code}</td>
+            $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/journal-detail', function(data) {
+                $.each(data, function(key, value) {
+                    $('#purchase_id').val(value.id);
+                    $('#transaction_number').html(value.transaction_number);
+                    $('#journal_date').html(value.date);
+                    $('#journal_desc').html(value.description);
+                    $('tbody#journal').append(`<tr class="journal">
+                    <td>${value.transaction_number}</td>
+                    <td>${value.name}|${value.account_code}</td>
                     <td>${value.debit}</td>
                     <td>${value.credit}</td>
                 </tr>`);
+                })
             })
-        })
-        $('tr.journal').remove();
+            $('tr.journal').remove();
+        });
     });
-});
 </script>
 
 <!-- Modal -->
-<div class="modal fade" id="modal-md" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modal-lg" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detailsModalLabel">Detail</h5>
@@ -176,17 +192,13 @@ $(document).ready(function() {
                     <div class="col-md-12">
                         <hr>
                         <h4>Jurnal Detail</h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Faktur : <i id="transaction_number"></i></li>
-                            <li class="list-group-item">Tanggal : <i id="journal_date"></i></li>
-                            <li class="list-group-item">Description : <i id="journal_desc"></i></li>
-                        </ul>
                     </div>
                 </div>
                 <table class="table table-sm table-bordered table-striped">
                     <thead class="bg-navy">
                         <tr>
-                            <th>Kode</th>
+                            <th>No Jurnal</th>
+                            <th>Nama|Kode</th>
                             <th>Debit</th>
                             <th>Credit</th>
                         </tr>

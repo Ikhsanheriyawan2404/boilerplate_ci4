@@ -70,8 +70,7 @@ class Sale extends BaseController
 
     public function journalDetail($id = null)
     {
-        $sale = $this->sales->find($id);
-        $journal = $this->sales->findJournalDetail($sale->journal_id);
+        $journal = $this->sales->findJournalDetail($id);
         return $this->respond($journal);
     }
 }

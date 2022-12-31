@@ -13,48 +13,80 @@ class SubGroupAccountSeeder extends Seeder
         $data = [
             [
                 'group_account_id' => 1,
-                'code' => 1,
-                'name' => 'Asset/Harta',
+                'code' => '10000',
+                'name' => 'Kas & Bank',
+            ],
+            [
+                'group_account_id' => 1,
+                'code' => '10100',
+                'name' => 'Akun Piutang',
+            ],
+            [
+                'group_account_id' => 1,
+                'code' => '10200',
+                'name' => 'Persediaan',
+            ],
+            [
+                'group_account_id' => 1,
+                'code' => '10300',
+                'name' => 'Aktiva Lancar Lainnya',
+            ],
+            [
+                'group_account_id' => 1,
+                'code' => '10700',
+                'name' => 'Aktiva Tetap',
+            ],
+            [
+                'group_account_id' => 1,
+                'code' => '10750',
+                'name' => 'Depresiasi & Amortisasi',
+            ],
+            // =========================================
+            [
+                'group_account_id' => 2,
+                'code' => '20100',
+                'name' => 'Akun Hutang',
             ],
             [
                 'group_account_id' => 2,
-                'code' => 2,
-                'name' => 'Liability/Hutang',
+                'code' => '20200',
+                'name' => 'Kewajiban Lancar Lainnya',
             ],
+            // ===================================
             [
                 'group_account_id' => 3,
-                'code' => 3,
-                'name' => 'Equity/Modal',
+                'code' => '30000',
+                'name' => 'Ekuitas',
             ],
+            // =======================================
             [
                 'group_account_id' => 4,
-                'code' => 4,
-                'name' => 'Revenue/Pendapatan',
+                'code' => '40000',
+                'name' => 'Pendapatan',
             ],
+            // =========================================
             [
                 'group_account_id' => 5,
-                'code' => 5,
-                'name' => 'Expenses/Beban',
+                'code' => '50000',
+                'name' => 'HPP',
             ],
+            // =======================================
             [
                 'group_account_id' => 6,
-                'code' => 6,
-                'name' => 'Operating Revenue/Biaya Operasional',
+                'code' => '60000',
+                'name' => 'Beban',
             ],
+            // ================================================
             [
                 'group_account_id' => 7,
-                'code' => 7,
+                'code' => '70000',
                 'name' => 'Pendapatan Lainnya',
             ],
+            // =============================================
             [
                 'group_account_id' => 8,
-                'code' => 8,
+                'code' => '80000',
                 'name' => 'Beban Lainnya',
-            ],
-            [
-                'group_account_id' => 9,
-                'code' => 9,
-                'name' => 'Beban Pajak',
             ],
         ];
         $model->insertBatch($data);

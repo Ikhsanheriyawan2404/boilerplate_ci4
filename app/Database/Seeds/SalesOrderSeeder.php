@@ -12,27 +12,27 @@ use App\Models\JournalTransactionModel;
 
 class SalesOrderSeeder extends Seeder
 {
-    protected $bankBRI = '11201';
-    protected $kas = '11000';
+    protected $bankBRI = '10002';
+    protected $kas = '10001';
     protected $modal = '31000';
     protected $persedianBarang = '10300';
     protected $pendapatan = '41000';
 
     public function run()
     {   
-        $journalId = $this->storeJournal([
-            'store_id' => 1,
-            'transaction_number' => 'Journal#1004',
-            'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan isinya'
-        ]);
-
         $saleId = $this->storeSales([
             'document' => null,
-            'journal_id' => $journalId,
             'status' => 'paid',
             'date' => Time::now(),
-            'description' => 'Pembelian Barang Tabu7ng Gas LPG 3kg dan Isinya'
+            'description' => 'Penjualan Barang Tabu7ng Gas LPG 3kg dan Isinya'
+        ]);
+
+        $journalId = $this->storeJournal([
+            'store_id' => 1,
+            'sales_order_id' => $saleId,
+            'transaction_number' => 'Journal#1004',
+            'date' => Time::now(),
+            'description' => 'Penjualan Barang Tabu7ng Gas LPG 3kg dan isinya'
         ]);
 
         $result1 = $this->storeSalesDetails([
@@ -73,7 +73,6 @@ class SalesOrderSeeder extends Seeder
             'business_partner_id' => 1,
             'store_id' => 1,
             'document' => $data['document'],
-            'journal_id' => $data['journal_id'],
             'status' => $data['status'],
             'date' => $data['date'],
             'description' => $data['description']
@@ -96,7 +95,7 @@ class SalesOrderSeeder extends Seeder
         $saleDetails->insert($data);
         $item = $items->where('id', $data['item_id'])->first();
         $items->update($data['item_id'], [
-            'stock' => $item->stock + $data['qty'],
+            'stock' => $item->stock - $data['qty'],
         ]);
 
         return $data;
@@ -108,6 +107,7 @@ class SalesOrderSeeder extends Seeder
         $journals->insert([
             'store_id' => 1,
             'journal_type_id' => random_int(1, 6),
+            'sales_order_id' =>  $data['sales_order_id'],
             'transaction_number' => $data['transaction_number'],
             'date' => $data['date'],
             'description' => $data['description']
@@ -119,7 +119,6 @@ class SalesOrderSeeder extends Seeder
     public function storeDetailJournal(array $array)
     {
         $transactions = new JournalTransactionModel();
-        // $accounts = new AccountModel();
         $data = [
             'store_id' => $array['store_id'],
             'account_code' => $array['account_code'],
@@ -128,10 +127,5 @@ class SalesOrderSeeder extends Seeder
             'credit' => $array['credit'],
         ];
         $transactions->insert($data);
-        // $account = $accounts->where('code', $data['account_code'])->first();
-        // $accounts->update($account->id, [
-        //     'debit' => $account->debit + $data['debit'],
-        //     'credit' => $account->credit + $data['credit'],
-        // ]);
     }
 }

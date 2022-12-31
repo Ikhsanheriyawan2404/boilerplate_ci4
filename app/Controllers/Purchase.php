@@ -6,6 +6,7 @@ use App\Models\PurchaseOrderModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
+use Config\Database;
 
 class Purchase extends BaseController
 {
@@ -70,8 +71,7 @@ class Purchase extends BaseController
 
     public function journalDetail($id = null)
     {
-        $purchase = $this->purchases->find($id);
-        $journal = $this->purchases->findJournalDetail($purchase->journal_id);
+        $journal = $this->purchases->findJournalDetail($id);
         return $this->respond($journal);
     }
 }

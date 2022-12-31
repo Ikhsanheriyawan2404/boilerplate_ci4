@@ -14,6 +14,16 @@ class CreateJournalsTable extends Migration
 				'unsigned'       => true,
 				'auto_increment' => true,
 			],
+			'purchase_order_id' => [
+				'type' => 'BIGINT',
+				'unsigned' => true,
+				'null' => true
+			],
+			'sales_order_id' => [
+				'type' => 'BIGINT',
+				'unsigned' => true,
+				'null' => true
+			],
 			'store_id' => [
 				'type' => 'BIGINT',
 				'unsigned' => true
@@ -48,6 +58,8 @@ class CreateJournalsTable extends Migration
 		$this->forge->addKey('id', true);
 		$this->forge->addForeignKey('store_id', 'stores', 'id');
 		$this->forge->addForeignKey('journal_type_id', 'journal_type', 'id');
+		$this->forge->addForeignKey('purchase_order_id', 'purchase_orders', 'id');
+		$this->forge->addForeignKey('sales_order_id', 'sales_orders', 'id');
 		$this->forge->createTable('journals');
     }
 

@@ -127,7 +127,8 @@ $(document).ready(function() {
                 $('#journal_date').html(value.date);
                 $('#journal_desc').html(value.description);
                 $('tbody#journal').append(`<tr class="journal">
-                    <td>${value.account_code}</td>
+                    <td>${value.transaction_number}</td>
+                    <td>${value.name}|${value.account_code}</td>
                     <td>${value.debit}</td>
                     <td>${value.credit}</td>
                 </tr>`);
@@ -176,17 +177,13 @@ $(document).ready(function() {
                     <div class="col-md-12">
                         <hr>
                         <h4>Jurnal Detail</h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Faktur : <i id="transaction_number"></i></li>
-                            <li class="list-group-item">Tanggal : <i id="journal_date"></i></li>
-                            <li class="list-group-item">Description : <i id="journal_desc"></i></li>
-                        </ul>
                     </div>
                 </div>
                 <table class="table table-sm table-bordered table-striped">
                     <thead class="bg-navy">
                         <tr>
-                            <th>Kode</th>
+                            <th>No Jurnal</th>
+                            <th>Nama|Kode</th>
                             <th>Debit</th>
                             <th>Credit</th>
                         </tr>
