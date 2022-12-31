@@ -115,7 +115,7 @@ class SalesOrderSeeder extends Seeder
     {
         $sales = new SalesOrderModel();
         $sales->insert([
-            'business_partner_id' => 1,
+            'business_partner_id' => 2,
             'store_id' => 1,
             'document' => $data['document'],
             'status' => $data['status'],

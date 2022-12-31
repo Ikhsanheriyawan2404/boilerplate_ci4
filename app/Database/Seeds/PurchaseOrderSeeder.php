@@ -249,7 +249,6 @@ class PurchaseOrderSeeder extends Seeder
             'status' => 'open',
             'transaction_date' => Carbon::now(),
             'overdue_date' => Carbon::now(),
-            'payment_date' => Carbon::now(),
             'description' => 'Pembelian Isi Lpg 30 units = 90kg'
         ]);
 
@@ -296,7 +295,7 @@ class PurchaseOrderSeeder extends Seeder
             'status' => $data['status'],
             'transaction_date' => $data['transaction_date'],
             'overdue_date' => $data['overdue_date'],
-            'payment_date' => $data['payment_date'],
+            'payment_date' => $data['payment_date'] ?? null,
             'description' => $data['description']
         ]);
 

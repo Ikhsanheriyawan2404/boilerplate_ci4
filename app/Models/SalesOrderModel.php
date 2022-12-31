@@ -46,7 +46,7 @@ class SalesOrderModel extends Model
         return $builder->select('
             pd.id, pd.qty, pd.item_id, pd.total_price,
             items.name as item_name,
-            so.date, so.description')
+            so.transaction_date, so.overdue_date, so.payment_date, so.description')
             ->where('sales_order_id', $id)
             ->where('pd.sales_order_id', $id)
             ->join('sales_orders as so', 'pd.sales_order_id = so.id')

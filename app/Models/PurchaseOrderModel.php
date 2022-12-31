@@ -46,7 +46,7 @@ class PurchaseOrderModel extends Model
         return $builder->select('
             pd.id, pd.qty, pd.item_id, pd.total_price,
             items.name as item_name,
-            po.date, po.description')
+            po.transaction_date, po.overdue_date, po.payment_date, po.description')
             ->where('purchase_order_id', $id)
             ->where('pd.purchase_order_id', $id)
             ->join('purchase_orders as po', 'pd.purchase_order_id = po.id')

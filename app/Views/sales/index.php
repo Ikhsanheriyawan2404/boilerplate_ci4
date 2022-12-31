@@ -109,7 +109,9 @@ $(document).ready(function() {
         $.get("<?= base_url('sale') ?>" + '/' + sales_id + '/sales-detail', function(data) {
             $.each(data, function (key, value) {
                 $('#sales_id').val(value.id);
-                $('#sales_date').html(value.date);
+                $('#transaction_date').html(value.transaction_date);
+                $('#overdue_date').html(value.overdue_date);
+                $('#payment_date').html(value.payment_date);
                 $('#sales_desc').html(value.description);
                 $('tbody#sales').append(`<tr class="sales">
                     <td>${value.item_name}</td>
@@ -155,7 +157,9 @@ $(document).ready(function() {
                         <hr>
                         <h4>Sales Detail</h4>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Tanggal : <i id="sales_date"></i></li>
+                            <li class="list-group-item">Tanggal : <i id="transaction_date"></i></li>
+                            <li class="list-group-item">Tanggal Jatuh Tempo : <i id="overdue_date"></i></li>
+                            <li class="list-group-item">Tanggal Pembayaran : <i id="payment_date"></i></li>
                             <li class="list-group-item">Description : <i id="sales_desc"></i></li>
                         </ul>
                     </div>

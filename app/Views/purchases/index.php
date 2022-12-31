@@ -124,7 +124,9 @@
             $.get("<?= base_url('purchase') ?>" + '/' + purchase_id + '/purchase-detail', function(data) {
                 $.each(data, function(key, value) {
                     $('#purchase_id').val(value.id);
-                    $('#purchase_date').html(value.date);
+                    $('#transaction_date').html(value.transaction_date);
+                    $('#overdue_date').html(value.overdue_date);
+                    $('#payment_date').html(value.payment_date);
                     $('#purchase_desc').html(value.description);
                     $('tbody#purchase').append(`<tr class="purchase">
                     <td>${value.item_name}</td>
@@ -170,7 +172,9 @@
                         <hr>
                         <h4>Purchase Detail</h4>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Tanggal : <i id="purchase_date"></i></li>
+                            <li class="list-group-item">Tanggal : <i id="transaction_date"></i></li>
+                            <li class="list-group-item">Tanggal Jatuh Tempo : <i id="overdue_date"></i></li>
+                            <li class="list-group-item">Tanggal Pembayaran : <i id="payment_date"></i></li>
                             <li class="list-group-item">Description : <i id="purchase_desc"></i></li>
                         </ul>
                     </div>
