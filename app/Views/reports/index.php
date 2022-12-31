@@ -52,51 +52,63 @@
                                     <th><b>Asset/Harta</b></th>
                                     <th></th>
                                 </tr>
-                                <?php foreach ($assets as $asset) : ?>
+                                <?php
+                                $totalAsset = 0;
+                                foreach ($assets as $asset) : ?>
                                     <tr>
                                         <td><?= $asset->code . ' | ' . $asset->name ?></td>
-                                        <td><?= $asset->debit - $asset->credit ?></td>
+                                        <td><?= number_format($asset->saldo) ?></td>
                                     </tr>
-                                <?php endforeach ?>
+                                <?php
+                                $totalAsset += $asset->saldo;
+                                endforeach ?>
                                 <tr>
                                     <th><b>Total Asset : </b></th>
-                                    <th><?= $asset->total ?></th>
+                                    <th><?= number_format($totalAsset) ?></th>
                                 </tr>
                                 <tr>
                                     <th><b>Liability/Kewajiban</b></th>
                                     <th></th>
                                 </tr>
-                                <?php foreach ($liabilities as $liability) : ?>
+                                <?php 
+                                $totalLiability = 0;
+                                foreach ($liabilities as $liability) : ?>
                                     <tr>
                                         <td><?= $liability->code . ' | ' . $liability->name ?></td>
-                                        <td><?= $liability->credit - $liability->debit ?></td>
+                                        <td><?= number_format($liability->saldo) ?></td>
                                     </tr>
-                                <?php endforeach ?>
+                                <?php
+                                $totalLiability += $liability->saldo; 
+                                endforeach ?>
                                 <tr>
                                     <th><b>Total Kewajiban : </b></th>
-                                    <th><?= $liability->total ?></th>
+                                    <th><?= number_format($totalLiability) ?></th>
                                 </tr>
                                 <tr>
                                     <th><b>Equity/Modal</b></th>
                                     <th></th>
                                 </tr>
-                                <?php foreach ($equities as $equity) : ?>
+                                <?php
+                                $totalEquity = 0; 
+                                foreach ($equities as $equity) : ?>
                                     <tr>
                                         <td><?= $equity->code . ' | ' . $equity->name ?></td>
-                                        <td><?= $equity->credit - $equity->debit ?></td>
+                                        <td><?= number_format($equity->saldo) ?></td>
                                     </tr>
-                                <?php endforeach ?>
-                                <tr>
-                                    <td><b>Pendapatan Periode Ini : </b></td>
-                                    <td><?= $revenues[0]->total - $cost_of_sales[0]->total ?></td>
-                                </tr>
+                                <?php
+                                $totalEquity += $equity->saldo; 
+                                endforeach ?>
                                 <tr>
                                     <th><b>Total Modal : </b></th>
-                                    <th><?= $equity->total + ($revenues[0]->total - $cost_of_sales[0]->total) ?></th>
+                                    <th><?= number_format($totalEquity) ?></th>
+                                </tr>
+                                <tr>
+                                    <th><b>Total Modal & Kewajiban : </b></th>
+                                    <th><?= number_format($totalEquity + $totalLiability) ?></th>
                                 </tr>
                                 <tr>
                                     <th><b>Balance Sheet</b></th>
-                                    <th><?= $asset->total - ($liability->total + ($equity->total + ($revenues[0]->total - $cost_of_sales[0]->total)))  ?></th>
+                                    <th><?= number_format($totalEquity + $totalLiability - $totalAsset) ?></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -126,89 +138,41 @@
                                     <th><b>Pendapatan</b></th>
                                     <th></th>
                                 </tr>
-                                <?php foreach ($revenues as $revenue) : ?>
+                                <?php
+                                $totalRevenue = 0; 
+                                foreach ($revenues as $revenue) : ?>
                                     <tr>
                                         <td><?= $revenue->code . ' | ' . $revenue->name ?></td>
-                                        <td><?= $revenue->credit - $revenue->debit ?></td>
+                                        <td><?= number_format($revenue->saldo) ?></td>
                                     </tr>
-                                <?php endforeach ?>
+                                <?php 
+                                $totalRevenue += $revenue->saldo;
+                                endforeach ?>
                                 <tr>
                                     <th><b>Total : </b></th>
-                                    <th><?= $revenue->total ?></th>
+                                    <th><?= number_format($totalRevenue) ?></th>
                                 </tr>
                                 <tr>
                                     <th><b>Cost Of Sales</b></th>
                                     <th></th>
                                 </tr>
-                                <?php foreach ($cost_of_sales as $cost_of_sale) : ?>
+                                <?php
+                                $totalCostOfSales = 0;
+                                foreach ($cost_of_sales as $cost_of_sale) : ?>
                                     <tr>
                                         <td><?= $cost_of_sale->code . ' | ' . $cost_of_sale->name ?></td>
-                                        <td><?= $cost_of_sale->debit - $cost_of_sale->credit ?></td>
+                                        <td><?= number_format($cost_of_sale->saldo) ?></td>
                                     </tr>
-                                <?php endforeach ?>
+                                <?php
+                                $totalCostOfSales += $cost_of_sale->saldo;
+                                endforeach ?>
                                 <tr>
                                     <th><b>Total : </b></th>
-                                    <th><?= $cost_of_sale->total ?></th>
-                                </tr>
-                                <tr>
-                                    <th><b>Biaya Operasional</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($operational_expenses as $operational_expense) : ?>
-                                    <tr>
-                                        <td><?= $operational_expense->code . ' | ' . $operational_expense->name ?></td>
-                                        <td><?= $operational_expense->debit - $operational_expense->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr>
-                                    <th><b>Total : </b></th>
-                                    <th><?= $operational_expense->total ?></th>
-                                </tr>
-                                <tr>
-                                    <th><b>Other Income</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($other_incomes as $other_income) : ?>
-                                    <tr>
-                                        <td><?= $other_income->code . ' | ' . $other_income->name ?></td>
-                                        <td><?= $other_income->debit - $other_income->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr>
-                                    <th><b>Total : </b></th>
-                                    <th><?= $other_income->total ?></th>
-                                </tr>
-                                <tr>
-                                    <th><b>Other Income</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($other_expenses as $other_expense) : ?>
-                                    <tr>
-                                        <td><?= $other_expense->code . ' | ' . $other_expense->name ?></td>
-                                        <td><?= $other_expense->debit - $other_expense->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr>
-                                    <th><b>Total : </b></th>
-                                    <th><?= $other_expense->total ?></th>
-                                </tr>
-                                <tr>
-                                    <th><b>Taxes</b></th>
-                                    <th></th>
-                                </tr>
-                                <?php foreach ($taxes as $tax) : ?>
-                                    <tr>
-                                        <td><?= $tax->code . ' | ' . $tax->name ?></td>
-                                        <td><?= $tax->debit - $tax->credit ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                                <tr>
-                                    <th><b>Total : </b></th>
-                                    <th><?= $tax->total ?></th>
+                                    <th><?= number_format($totalCostOfSales) ?></th>
                                 </tr>
                                 <tr>
                                     <th><b>Total Laba/Rugi</b></th>
-                                    <th><?= $revenues[0]->total - $cost_of_sales[0]->total ?></th>
+                                    <th></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -232,8 +196,7 @@
                                     <th width="3%">No</th>
                                     <th width="3%">Kode</th>
                                     <th width="3%">Nama Akun</th>
-                                    <th width="3%">Debit</th>
-                                    <th width="3%">Kredit</th>
+                                    <th width="3%">Saldo</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -243,8 +206,7 @@
                                     <td><?= $no++ ?></td>
                                     <td style="align-left"><?= $account->code ?></td>
                                     <td><?= $account->name ?></td>
-                                    <td class="text-right"><?= $account->debit ?></td>
-                                    <td class="text-right"><?= $account->credit ?></td>
+                                    <td class="text-right"><?= $account->saldo !== null ? number_format($account->saldo) : 0 ?></td>
                                 </tr>
                                 <?php endforeach ?>
                             </tbody>

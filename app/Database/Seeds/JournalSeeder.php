@@ -73,53 +73,53 @@ class JournalSeeder extends Seeder
             'credit' => 15000000,
         ]);
         // ====================================================
-        $journalId = $this->saveJournal([
-            'store_id' => 1,
-            'transaction_number' => 'JournalUmum#1003',
-            'journal_type_id' => 5,
-            'date' => Time::now(),
-            'description' => 'Beban Gaji Karyawan'
-        ]);
+        // $journalId = $this->saveJournal([
+        //     'store_id' => 1,
+        //     'transaction_number' => 'JournalUmum#1003',
+        //     'journal_type_id' => 5,
+        //     'date' => Time::now(),
+        //     'description' => 'Beban Gaji Karyawan'
+        // ]);
 
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $bankBRI,
-            'journal_id' => $journalId,
-            'debit' => 0,
-            'credit' => 15000000,
-        ]);
+        // $this->saveDetailJournal([
+        //     'store_id' => 1,
+        //     'account_code' => $bankBRI,
+        //     'journal_id' => $journalId,
+        //     'debit' => 0,
+        //     'credit' => 15000000,
+        // ]);
 
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $biayaKaryawan,
-            'journal_id' => $journalId,
-            'debit' => 15000000,
-            'credit' => 0,
-        ]);
-        // ===============================
-        $journalId = $this->saveJournal([
-            'store_id' => 1,
-            'transaction_number' => 'JournalUmum#1004',
-            'journal_type_id' => 5,
-            'date' => Time::now(),
-            'description' => 'Biaya Listrik'
-        ]);
+        // $this->saveDetailJournal([
+        //     'store_id' => 1,
+        //     'account_code' => $biayaKaryawan,
+        //     'journal_id' => $journalId,
+        //     'debit' => 15000000,
+        //     'credit' => 0,
+        // ]);
+        // // ===============================
+        // $journalId = $this->saveJournal([
+        //     'store_id' => 1,
+        //     'transaction_number' => 'JournalUmum#1004',
+        //     'journal_type_id' => 5,
+        //     'date' => Time::now(),
+        //     'description' => 'Biaya Listrik'
+        // ]);
 
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $bankBRI,
-            'journal_id' => $journalId,
-            'debit' => 0,
-            'credit' => 500000,
-        ]);
+        // $this->saveDetailJournal([
+        //     'store_id' => 1,
+        //     'account_code' => $bankBRI,
+        //     'journal_id' => $journalId,
+        //     'debit' => 0,
+        //     'credit' => 500000,
+        // ]);
 
-        $this->saveDetailJournal([
-            'store_id' => 1,
-            'account_code' => $biayaListrik,
-            'journal_id' => $journalId,
-            'debit' => 500000,
-            'credit' => 0,
-        ]);
+        // $this->saveDetailJournal([
+        //     'store_id' => 1,
+        //     'account_code' => $biayaListrik,
+        //     'journal_id' => $journalId,
+        //     'debit' => 500000,
+        //     'credit' => 0,
+        // ]);
     }
 
     public function saveJournal(array $data) : int
