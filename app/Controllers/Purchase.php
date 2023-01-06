@@ -6,15 +6,22 @@ use App\Models\PurchaseOrderModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
-use Config\Database;
+use App\Models\BusinessPartnerModel;
+use App\Models\ItemModel;
 
 class Purchase extends BaseController
 {
     use ResponseTrait;
-    
+
+    protected $purchases;
+    protected $vendors;
+    protected $items;
+
     public function __construct()
     {
         $this->purchases = new PurchaseOrderModel();
+        $this->vendors = new BusinessPartnerModel();
+        $this->items = new ItemModel();
     }
 
     public function datatables()
@@ -39,7 +46,7 @@ class Purchase extends BaseController
                 $open = '<td class="text-center">
                 <div class="mb-2 me-2 badge bg-warning">Open</div>
                 </td>';
-                return $row->status === 'open' ? $open : $paid;    
+                return $row->status === 'open' ? $open : $paid;
             })
             ->add('action', function ($row) {
                 $btn = '<td class="text-center">
@@ -61,6 +68,43 @@ class Purchase extends BaseController
         return view('purchases/index', [
             'title' => 'Pembelian/Purchase',
         ]);
+    }
+
+    public function new()
+    {
+        return view('purchases/new', [
+            'title' => 'Pembelian/Purchase',
+            'vendors' => $this->vendors->where('type', 'vendor')->findAll(),
+        ]);
+    }
+
+    public function item_datatable()
+    {
+        $builder = $this->items->select('id, name, item_code, stock, purchase_price');
+        return DataTable::of($builder)
+            ->addNumbering('no')
+            ->add('action', function ($row) {
+                $btn = '<button class="btn btn-sm btn-primary" onclick="chooseItem(' . $row->id . ')">
+                Pilih <i class="fa fa-check-circle">
+                </button>';
+                return $btn;
+            }, 'last')
+            ->toJson(true);
+    }
+
+    public function getItem($itemId)
+    {
+        $item = $this->items->find($itemId);
+        $row=[];
+        $row[] = '<span class="label label-success">' . $item->item_code . '</span';
+        $row[] = $item->name;
+        $row[] = 'Rp. ' . number_format($item->purchase_price);
+        $row[] = 0;
+        $row[] = 0;
+        $row[] = 0;
+        $row[] = 'kontol';
+        
+        return $this->respond($row);
     }
 
     public function purchaseDetail($id = null)

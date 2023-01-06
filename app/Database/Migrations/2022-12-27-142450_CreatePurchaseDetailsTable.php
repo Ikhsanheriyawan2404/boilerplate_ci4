@@ -26,6 +26,10 @@ class CreatePurchaseDetailsTable extends Migration
 				'type' => 'DECIMAL',
                 'constraint' => '15,2'
 			],
+			'discount' => [
+				'type' => 'INT',
+				'default' => 0,
+			],
 			'total_price' => [
 				'type' => 'DECIMAL',
                 'constraint' => '15,2'

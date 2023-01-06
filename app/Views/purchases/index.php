@@ -22,10 +22,10 @@
                 </div>
             </div>
             <div class="page-title-actions">
-                <button id="journal" data-placement="bottom" class="btn-shadow btn-sm mr-3 btn btn-dark">
+                <a href="<?= base_url('purchase/new') ?>" data-placement="bottom" class="btn-shadow btn-sm mr-3 btn btn-dark">
                     Tambah
                     <i class="fa fa-plus"></i>
-                </button>
+                </a>
             </div>
         </div>
     </div>
