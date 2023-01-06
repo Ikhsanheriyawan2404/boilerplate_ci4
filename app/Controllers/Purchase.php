@@ -2,26 +2,32 @@
 
 namespace App\Controllers;
 
+use Config\Database;
+use App\Models\ItemModel;
 use App\Models\PurchaseOrderModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
 use App\Models\BusinessPartnerModel;
-use App\Models\ItemModel;
+use App\Models\PurchaseDetailModel;
 
 class Purchase extends BaseController
 {
     use ResponseTrait;
 
     protected $purchases;
+    protected $purchaseDetails;
     protected $vendors;
     protected $items;
+    protected $db;
 
     public function __construct()
     {
         $this->purchases = new PurchaseOrderModel();
+        $this->purchaseDetails = new PurchaseDetailModel();
         $this->vendors = new BusinessPartnerModel();
         $this->items = new ItemModel();
+        $this->db = Database::connect();
     }
 
     public function datatables()
@@ -84,7 +90,7 @@ class Purchase extends BaseController
         return DataTable::of($builder)
             ->addNumbering('no')
             ->add('action', function ($row) {
-                $btn = '<button class="btn btn-sm btn-primary" onclick="chooseItem(' . $row->id . ')">
+                $btn = '<button class="btn btn-sm btn-primary chooseItem" data-id="'.$row->id.'">
                 Pilih <i class="fa fa-check-circle">
                 </button>';
                 return $btn;
@@ -96,15 +102,29 @@ class Purchase extends BaseController
     {
         $item = $this->items->find($itemId);
         $row=[];
-        $row[] = '<span class="label label-success">' . $item->item_code . '</span';
+        $row[] = '<input name="item_code" type="hidden" value="'.$item->item_code.'"><span class="btn btn-success">' . $item->item_code . '</span';
         $row[] = $item->name;
-        $row[] = 'Rp. ' . number_format($item->purchase_price);
-        $row[] = 0;
-        $row[] = 0;
-        $row[] = 0;
-        $row[] = 'kontol';
+        $row[] = '<input type="number" name="qty" class="form-control form-control-sm" value="0">';
+        $row[] = '<input type="number" name="purchase_price" class="form-control form-control-sm" value="'.$item->purchase_price.'">';
+        $row[] = '<input type="number" name="discount" class="form-control form-control-sm" value="0">';
+        $row[] = '<input type="number" name="total_price" class="form-control form-control-sm" value="0">';
+        $row[] = '<button class="btn btn-sm btn-danger removeItem">-</button>';
         
         return $this->respond($row);
+    }
+
+    public function create()
+    {
+        $this->db->transBegin();
+		try {
+            return $this->respond($this->request->getPost());
+			$this->purchases->insert($this->request->getPost());
+			$this->purchaseDetails->insert($this->request->getPost());
+			
+			$this->db->transCommit();
+		} catch (\Exception $e) {
+			$this->db->transRollback();
+		}
     }
 
     public function purchaseDetail($id = null)

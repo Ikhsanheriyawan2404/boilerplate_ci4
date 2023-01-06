@@ -35,7 +35,7 @@
             <div class="main-card mb-3 card">
                 <div class="card-body">
 
-                    <form class="">
+                    <form id="itemForm">
 
                         <div class="row">
                                 <div class="col-md-4">
@@ -110,7 +110,7 @@
                                         <button class="btn btn-secondary btn-sm">CANCEL</button>
                                     </div>
                                     <div class="btn-group">
-                                        <button class="btn btn-primary btn-sm">SIMPAN</button>
+                                        <button class="btn btn-primary btn-sm" id="createPurchase">SIMPAN</button>
                                         <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split dropdown-toggle btn btn-primary btn-sm"><span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -158,7 +158,6 @@
 
     let table1, table2;
     $(function () {
-        // table1 = $('#table-order').DataTable()
         table2 = $('#table-item').DataTable({
             processing: true,
             serverSide: true,
@@ -178,27 +177,66 @@
         $('#modalItem').modal('show');
     }
 
+    $(document).on('click', '#createPurchase', function(e) {
+        e.preventDefault();
+        var formData = new FormData($('#itemForm')[0]);
+        $.ajax({
+            data: formData,
+            url: "<?= base_url('purchase') ?>",
+            contentType : false,
+            processData : false,
+            type: "POST",
+            success: function (data) {
+                console.log(data)
+                $('#saveBtn').attr('disabled', 'disabled');
+                $('#saveBtn').html('Simpan ...');
+                $('#itemForm').trigger("reset");
+                $('#modal-md').modal('hide');
+                if (data.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oppss',
+                        text: 'Coba isi kembali data dengan benar!',
+                    });
+                    $.each(data.message, function (index, value) {
+                        toastr.error(value);
+                    });
+                }
+            },
+        });
+    })
+
     function hideItem() {
         $('#modalItem').modal('hide');
     }
 
-    function chooseItem(id, kode) {
+    $(document).on('click', '.chooseItem', function(e) {
         hideItem();
+        var id = $(this).data('id');
         $.get("<?= base_url('purchase') ?>" + "/" + id + '/item', function(data) {
-            console.log(data)
-            console.log(data.aksi)
 
             var tr = document.createElement("tr");
             for (var i = 0; i < 7; i++) {
-                console.log(data)
                 var td = document.createElement("td");
                 td.innerHTML = data[i];
                 tr.appendChild(td);
             }
 
-            document.getElementById("table-order").appendChild(tr);
+            document.querySelector("tbody").appendChild(tr);
         });
-    }
+    })
+
+    $(document).on('click', '.removeItem', function(e) {
+        e.preventDefault();
+        $(this).parents('tr').remove();
+    });
+
 </script>
 
 
