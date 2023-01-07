@@ -4,32 +4,40 @@ namespace App\Controllers;
 
 use Config\Database;
 use App\Models\ItemModel;
-use App\Helpers\ApiResponse;
-    use InvalidArgumentException;
+use App\Models\JournalModel;
+use App\Models\AccountModel;
+use InvalidArgumentException;
 use App\Models\PurchaseOrderModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
 use App\Models\PurchaseDetailModel;
 use App\Models\BusinessPartnerModel;
+use App\Models\JournalTransactionModel;
 
 class Purchase extends BaseController
 {
     use ResponseTrait;
 
-    protected $purchases;
-    protected $purchaseDetails;
-    protected $vendors;
-    protected $items;
     protected $db;
+    protected $items;
+    protected $vendors;
+    protected $accounts;
+    protected $journals;
+    protected $purchases;
+    protected $journalDetails;
+    protected $purchaseDetails;
 
     public function __construct()
     {
-        $this->purchases = new PurchaseOrderModel();
-        $this->purchaseDetails = new PurchaseDetailModel();
-        $this->vendors = new BusinessPartnerModel();
         $this->items = new ItemModel();
         $this->db = Database::connect();
+        $this->accounts = new AccountModel();
+        $this->journals = new JournalModel();
+        $this->purchases = new PurchaseOrderModel();
+        $this->vendors = new BusinessPartnerModel();
+        $this->purchaseDetails = new PurchaseDetailModel();
+        $this->journalDetails = new JournalTransactionModel();
     }
 
     public function datatables()
@@ -86,20 +94,6 @@ class Purchase extends BaseController
         ]);
     }
 
-    public function item_datatable()
-    {
-        $builder = $this->items->select('id, name, item_code, stock, purchase_price');
-        return DataTable::of($builder)
-            ->addNumbering('no')
-            ->add('action', function ($row) {
-                $btn = '<button class="btn btn-sm btn-primary chooseItem" data-id="'.$row->id.'">
-                Pilih <i class="fa fa-check-circle">
-                </button>';
-                return $btn;
-            }, 'last')
-            ->toJson(true);
-    }
-
     public function getItem($itemId)
     {
         $item = $this->items->find($itemId);
@@ -109,7 +103,7 @@ class Purchase extends BaseController
         $row[] = '<input type="number" name="qty[]" class="form-control form-control-sm" value="0">';
         $row[] = '<input type="number" name="purchase_price[]" class="form-control form-control-sm" value="'.$item->purchase_price.'">';
         $row[] = '<input type="number" name="discount[]" class="form-control form-control-sm" value="0">';
-        $row[] = '<input type="number" name="total_price[]" class="form-control form-control-sm" value="0" readonly>';
+        $row[] = '<input type="number" name="subtotal[]" class="form-control form-control-sm" value="0" readonly>';
         $row[] = '<button class="btn btn-sm btn-danger removeItem">-</button>';
         
         return $this->response->setJSON($row);
@@ -125,8 +119,14 @@ class Purchase extends BaseController
                 'overdue_date' => $this->request->getPost('overdue_date'),
                 'description' => $this->request->getPost('description'),
                 'store_id' => 1,
-                'status' => 'open',
+                'status' => $this->request->getPost('payment') == 'paid' ? 'paid' : 'open',
+                'discount' => 0,
+                'pay' => 0,
+                'total_price' => 0,
+                'user_id' => user()->id,
             ];
+
+            // Add new purchase order
             if ($this->purchases->save($data) === false) {
                 $errorMessages = [];
                 foreach ($this->purchases->errors() as $error) {
@@ -135,6 +135,7 @@ class Purchase extends BaseController
                 throw new InvalidArgumentException(json_encode($errorMessages), 422);
             }
 
+            // Add new purchase order details
             $totalRequestItem = $this->request->getPost('item_code');
             if ($totalRequestItem == null) {
                 throw new InvalidArgumentException('Item tidak boleh kosong', 400);
@@ -146,7 +147,7 @@ class Purchase extends BaseController
                         'qty' => $this->request->getPost('qty')[$i],
                         'price' => $this->request->getPost('purchase_price')[$i],
                         'discount' => $this->request->getPost('discount')[$i],
-                        'total_price' => $this->request->getPost('total_price')[$i],
+                        'subtotal' => $this->request->getPost('subtotal')[$i],
                     ];
     
                     if ($this->purchaseDetails->save($data) === false) {
@@ -156,8 +157,47 @@ class Purchase extends BaseController
                         }
                         throw new InvalidArgumentException(json_encode($errorMessages), 422);
                     }
+
+                    // Update stock item
+                    $item = $this->items->find($this->request->getPost('item_code')[$i]);
+                    $this->items->update($this->request->getPost('item_code')[$i], [
+                        'stock' => $item->stock + $this->request->getPost('qty')[$i],
+                    ]);
                 }
             }
+
+            // Add new journals
+            $purchases = $this->purchases->find($this->purchases->getInsertID());
+            
+            $this->journals->insert([
+                'store_id' => 1,
+                'journal_type_id' => 1,
+                'purchase_order_id' => $purchases->id,
+                'transaction_number' => 'JournalPembelian#1001',
+                'date' => $purchases->transaction_date,
+                'description' => $purchases->description,
+                'user_id' => user()->id,
+            ]);
+
+            $persediaanBarang = '10002';
+            $kas = '10001';
+
+            // Add new journal details
+            $journalDetails = [
+                [
+                    'journal_id' => $this->journals->getInsertID(),
+                    'account_code' => $this->accounts->where('code', $kas)->first()->code,
+                    'debit' => 0,
+                    'credit' => $purchases->total_price,
+                ],
+                [
+                    'journal_id' => $this->journals->getInsertID(),
+                    'account_code' => $this->accounts->where('code', $persediaanBarang)->first()->code,
+                    'debit' => 0,
+                    'credit' => $purchases->total_price,
+                ],
+            ];
+            $this->journalDetails->insertBatch($journalDetails);
 
 			$this->db->transCommit();
 
@@ -179,8 +219,8 @@ class Purchase extends BaseController
 		}
 
         return $this->response->setJSON([
-            'message' => 'Berhasil Menambahkan Order Purchase',
-            'data' => $this->request->getPost(),
+            'message' => 'Berhasil Menambahkan Order Pembelian',
+            'data' => $this->purchases->find($this->purchases->getInsertID()),
         ])->setStatusCode(200);
     }
 

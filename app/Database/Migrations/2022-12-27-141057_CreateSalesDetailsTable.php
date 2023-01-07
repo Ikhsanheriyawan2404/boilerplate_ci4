@@ -39,7 +39,7 @@ class CreateSalesDetailsTable extends Migration
                 'constraint' => '15,2',
 				'unsigned' => true,
 			],
-			'total_price' => [
+			'subtotal' => [
 				'type' => 'DECIMAL',
                 'constraint' => '15,2',
 				'unsigned' => true,

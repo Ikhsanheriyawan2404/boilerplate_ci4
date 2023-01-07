@@ -14,10 +14,6 @@ class CreateJournalsTransactionTable extends Migration
 				'unsigned'       => true,
 				'auto_increment' => true,
 			],
-			'store_id' => [
-				'type' => 'BIGINT',
-				'unsigned' => true
-			],
 			'journal_id' => [
 				'type' => 'BIGINT',
 				'unsigned' => true
@@ -34,11 +30,8 @@ class CreateJournalsTransactionTable extends Migration
 				'type'           => 'DECIMAL',
 				'constraint' => '15,2'
 			],
-			'created_at'       => ['type' => 'datetime', 'null' => true],
-            'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
 		$this->forge->addKey('id', true);
-		$this->forge->addForeignKey('store_id', 'stores', 'id');
 		$this->forge->addForeignKey('journal_id', 'journals', 'id');
 		$this->forge->addForeignKey('account_code', 'accounts', 'code');
 		$this->forge->createTable('journal_transactions');

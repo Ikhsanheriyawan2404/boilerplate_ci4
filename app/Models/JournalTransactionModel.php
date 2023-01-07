@@ -15,7 +15,6 @@ class JournalTransactionModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'store_id',
         'account_code',
         'journal_id',
         'credit',

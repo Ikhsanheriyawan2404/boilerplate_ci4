@@ -18,6 +18,10 @@ class CreateSalesOrdersTable extends Migration
 				'type' => 'BIGINT',
 				'unsigned' => true,
 			],
+			'user_id' => [
+				'type' => 'INT',
+				'unsigned' => true,
+			],
 			'business_partner_id' => [
 				'type' => 'BIGINT',
 				'unsigned' => true,
@@ -45,12 +49,28 @@ class CreateSalesOrdersTable extends Migration
                 'type' => 'ENUM',
                 'constraint' => ['draft', 'open', 'paid']
             ],
+			'discount' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2',
+				'unsigned' => true,
+			],
+			'total_price' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2',
+				'unsigned' => true,
+			],
+			'pay' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2',
+				'unsigned' => true,
+			],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);
 
         $this->forge->addKey('id', true);
 		$this->forge->addForeignKey('store_id', 'stores', 'id');
+		$this->forge->addForeignKey('user_id', 'users', 'id');
 		$this->forge->addForeignKey('business_partner_id', 'business_partners', 'id');
 		$this->forge->createTable('sales_orders');
     }

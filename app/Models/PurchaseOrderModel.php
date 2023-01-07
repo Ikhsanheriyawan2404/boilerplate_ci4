@@ -17,6 +17,7 @@ class PurchaseOrderModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'store_id',
+        'user_id',
         'business_partner_id',
         'transaction_date',
         'overdue_date',
@@ -38,6 +39,7 @@ class PurchaseOrderModel extends Model
         'business_partner_id' => 'required',
         'transaction_date' => 'required',
         'overdue_date' => 'required',
+        'status' => 'required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

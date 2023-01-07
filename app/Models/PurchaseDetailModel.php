@@ -20,8 +20,9 @@ class PurchaseDetailModel extends Model
     protected $validationRules      = [
         'purchase_order_id' => 'required',
         'qty' => 'required',
+        'discount' => 'required',
         'item_id' => 'required',
-        'total_price' => 'required',
+        'subtotal' => 'required',
     ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;

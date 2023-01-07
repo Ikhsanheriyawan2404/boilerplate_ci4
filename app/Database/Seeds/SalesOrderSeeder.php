@@ -44,14 +44,14 @@ class SalesOrderSeeder extends Seeder
             'sales_order_id' => $saleId,
             'qty' => 30,
             'item_id' => 1,
-            'total_price' => 110000 * 30,
+            'subtotal' => 110000 * 30,
         ]);
 
         $result2 = $this->storeSalesDetails([
             'sales_order_id' => $saleId,
             'qty' => 90,
             'item_id' => 2,
-            'total_price' => 15000 * 90,
+            'subtotal' => 15000 * 90,
         ]);
 
         $this->storeDetailJournal([
@@ -59,7 +59,7 @@ class SalesOrderSeeder extends Seeder
             'account_code' => $this->persediaanTabung,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result1['total_price'],
+            'credit' => $result1['subtotal'],
         ]);
 
         $this->storeDetailJournal([
@@ -67,7 +67,7 @@ class SalesOrderSeeder extends Seeder
             'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result2['total_price'],
+            'credit' => $result2['subtotal'],
         ]);
 
         $this->storeDetailJournal([
@@ -75,7 +75,7 @@ class SalesOrderSeeder extends Seeder
             'account_code' => $this->pendapatanTabung,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result1['total_price'],
+            'credit' => $result1['subtotal'],
         ]);
 
         $this->storeDetailJournal([
@@ -83,14 +83,14 @@ class SalesOrderSeeder extends Seeder
             'account_code' => $this->pendapatanLpg,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result2['total_price'],
+            'credit' => $result2['subtotal'],
         ]);
 
         // $this->storeDetailJournal([
         //     'store_id' => 1,
         //     'account_code' => $this->hppTabung,
         //     'journal_id' => $journalId,
-        //     'debit' => $result2['total_price'],
+        //     'debit' => $result2['subtotal'],
         //     'credit' => 0,
         // ]);
 
@@ -98,7 +98,7 @@ class SalesOrderSeeder extends Seeder
         //     'store_id' => 1,
         //     'account_code' => $this->hppLpg,
         //     'journal_id' => $journalId,
-        //     'debit' => $result2['total_price'],
+        //     'debit' => $result2['subtotal'],
         //     'credit' => 0,
         // ]);
 
@@ -106,7 +106,7 @@ class SalesOrderSeeder extends Seeder
             'store_id' => 1,
             'account_code' => $this->kas,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'] + $result2['total_price'],
+            'debit' => $result1['subtotal'] + $result2['subtotal'],
             'credit' => 0,
         ]);
     }
@@ -117,6 +117,7 @@ class SalesOrderSeeder extends Seeder
         $sales->insert([
             'business_partner_id' => 2,
             'store_id' => 1,
+            'user_id' => 1,
             'document' => $data['document'],
             'status' => $data['status'],
             'transaction_date' => $data['transaction_date'],
@@ -136,7 +137,7 @@ class SalesOrderSeeder extends Seeder
             'sales_order_id' => $array['sales_order_id'],
             'qty' => $array['qty'],
             'item_id' => $array['item_id'],
-            'total_price' => $array['total_price'],
+            'subtotal' => $array['subtotal'],
         ];
         
         $saleDetails->insert($data);
@@ -153,6 +154,7 @@ class SalesOrderSeeder extends Seeder
         $journals = new JournalModel();
         $journals->insert([
             'store_id' => 1,
+            'user_id' => 1,
             'journal_type_id' => random_int(1, 6),
             'sales_order_id' =>  $data['sales_order_id'],
             'transaction_number' => $data['transaction_number'],
@@ -167,7 +169,6 @@ class SalesOrderSeeder extends Seeder
     {
         $transactions = new JournalTransactionModel();
         $data = [
-            'store_id' => $array['store_id'],
             'account_code' => $array['account_code'],
             'journal_id' => $array['journal_id'],
             'debit' => $array['debit'],

@@ -33,14 +33,14 @@ class PurchaseOrderSeeder extends Seeder
             'purchase_order_id' => $purchaseId,
             'qty' => 30,
             'item_id' => 1,
-            'total_price' => 110000 * 30,
+            'subtotal' => 110000 * 30,
         ]);
 
         $result2 = $this->storePurchaseDetails([
             'purchase_order_id' => $purchaseId,
             'qty' => 90,
             'item_id' => 2,
-            'total_price' => 15000 * 90,
+            'subtotal' => 15000 * 90,
         ]);
 
         $journalId = $this->storeJournal([
@@ -56,7 +56,7 @@ class PurchaseOrderSeeder extends Seeder
             'store_id' => 1,
             'account_code' => $this->persediaanTabung,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'],
+            'debit' => $result1['subtotal'],
             'credit' => 0,
         ]);
 
@@ -64,7 +64,7 @@ class PurchaseOrderSeeder extends Seeder
             'store_id' => 1,
             'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
-            'debit' => $result2['total_price'],
+            'debit' => $result2['subtotal'],
             'credit' => 0,
         ]);
 
@@ -73,7 +73,7 @@ class PurchaseOrderSeeder extends Seeder
             'account_code' => $this->hutangUsaha,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result1['total_price'] + $result2['total_price'],
+            'credit' => $result1['subtotal'] + $result2['subtotal'],
         ]);
 
         $journalId = $this->storeJournal([
@@ -89,7 +89,7 @@ class PurchaseOrderSeeder extends Seeder
             'store_id' => 1,
             'account_code' => $this->hutangUsaha,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'] + $result2['total_price'],
+            'debit' => $result1['subtotal'] + $result2['subtotal'],
             'credit' => 0,
         ]);
 
@@ -98,7 +98,7 @@ class PurchaseOrderSeeder extends Seeder
             'account_code' => $this->bankBRI,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result1['total_price'] + $result2['total_price'],
+            'credit' => $result1['subtotal'] + $result2['subtotal'],
         ]);
         // ====================================================================
 
@@ -124,21 +124,21 @@ class PurchaseOrderSeeder extends Seeder
             'purchase_order_id' => $purchaseId,
             'qty' => 50,
             'item_id' => 1,
-            'total_price' => 110000 * 50,
+            'subtotal' => 110000 * 50,
         ]);
 
         $result2 = $this->storePurchaseDetails([
             'purchase_order_id' => $purchaseId,
             'qty' => 150,
             'item_id' => 2,
-            'total_price' => 15000 * 150,
+            'subtotal' => 15000 * 150,
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
             'account_code' => $this->persediaanTabung,
             'journal_id' => $journalId,
-            'debit' => $result1['total_price'],
+            'debit' => $result1['subtotal'],
             'credit' => 0,
         ]);
 
@@ -146,7 +146,7 @@ class PurchaseOrderSeeder extends Seeder
             'store_id' => 1,
             'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
-            'debit' => $result2['total_price'],
+            'debit' => $result2['subtotal'],
             'credit' => 0,
         ]);
 
@@ -155,7 +155,7 @@ class PurchaseOrderSeeder extends Seeder
             'account_code' => $this->bankBRI,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result1['total_price'] + $result2['total_price'],
+            'credit' => $result1['subtotal'] + $result2['subtotal'],
         ]);
         // ====================================================================
         $purchaseId = $this->storePurchase([
@@ -180,14 +180,14 @@ class PurchaseOrderSeeder extends Seeder
             'purchase_order_id' => $purchaseId,
             'qty' => 60,
             'item_id' => 2,
-            'total_price' => 15000 * 60,
+            'subtotal' => 15000 * 60,
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
             'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
-            'debit' => $result2['total_price'],
+            'debit' => $result2['subtotal'],
             'credit' => 0,
         ]);
 
@@ -196,7 +196,7 @@ class PurchaseOrderSeeder extends Seeder
             'account_code' => $this->bankBRI,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result2['total_price'],
+            'credit' => $result2['subtotal'],
         ]);
 
         // =============================================
@@ -223,14 +223,14 @@ class PurchaseOrderSeeder extends Seeder
             'purchase_order_id' => $purchaseId,
             'qty' => 60,
             'item_id' => 2,
-            'total_price' => 15000 * 60,
+            'subtotal' => 15000 * 60,
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
             'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
-            'debit' => $result2['total_price'],
+            'debit' => $result2['subtotal'],
             'credit' => 0,
         ]);
 
@@ -239,7 +239,7 @@ class PurchaseOrderSeeder extends Seeder
             'account_code' => $this->bankBRI,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result2['total_price'],
+            'credit' => $result2['subtotal'],
         ]);
 
         // ====================================================================
@@ -265,14 +265,14 @@ class PurchaseOrderSeeder extends Seeder
             'purchase_order_id' => $purchaseId,
             'qty' => 90,
             'item_id' => 2,
-            'total_price' => 15000 * 90,
+            'subtotal' => 15000 * 90,
         ]);
 
         $this->storeDetailJournal([
             'store_id' => 1,
             'account_code' => $this->persediaanLpg,
             'journal_id' => $journalId,
-            'debit' => $result2['total_price'],
+            'debit' => $result2['subtotal'],
             'credit' => 0,
         ]);
 
@@ -281,7 +281,7 @@ class PurchaseOrderSeeder extends Seeder
             'account_code' => $this->hutangUsaha,
             'journal_id' => $journalId,
             'debit' => 0,
-            'credit' => $result2['total_price'],
+            'credit' => $result2['subtotal'],
         ]);
     }
 
@@ -289,8 +289,9 @@ class PurchaseOrderSeeder extends Seeder
     {
         $purchases = new PurchaseOrderModel();
         $purchases->insert([
-            'business_partner_id' => 1,
+            'user_id' => 1,
             'store_id' => 1,
+            'business_partner_id' => 1,
             'document' => $data['document'],
             'status' => $data['status'],
             'transaction_date' => $data['transaction_date'],
@@ -310,7 +311,7 @@ class PurchaseOrderSeeder extends Seeder
             'purchase_order_id' => $array['purchase_order_id'],
             'qty' => $array['qty'],
             'item_id' => $array['item_id'],
-            'total_price' => $array['total_price'],
+            'subtotal' => $array['subtotal'],
         ];
         
         $purchaseDetails->insert($data);
@@ -327,6 +328,7 @@ class PurchaseOrderSeeder extends Seeder
         $journals = new JournalModel();
         $journals->insert([
             'store_id' => 1,
+            'user_id' => 1,
             'journal_type_id' => $data['journal_type_id'] ?? random_int(1, 6),
             'purchase_order_id' => $data['purchase_order_id'],
             'transaction_number' => $data['transaction_number'],
@@ -341,7 +343,6 @@ class PurchaseOrderSeeder extends Seeder
     {
         $transactions = new JournalTransactionModel();
         $data = [
-            'store_id' => $array['store_id'],
             'account_code' => $array['account_code'],
             'journal_id' => $array['journal_id'],
             'debit' => $array['debit'],

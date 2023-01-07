@@ -18,7 +18,6 @@ class JournalSeeder extends Seeder
         $biayaListrik = '61700';
 
         $journalId = $this->saveJournal([
-            'store_id' => 1,
             'transaction_number' => 'JournalUmum#1001',
             'journal_type_id' => 5,
             'date' => Time::now(),
@@ -26,7 +25,6 @@ class JournalSeeder extends Seeder
         ]);
 
         $this->saveDetailJournal([
-            'store_id' => 1,
             'account_code' => $bankBRI,
             'journal_id' => $journalId,
             'debit' => 200000000,
@@ -34,7 +32,6 @@ class JournalSeeder extends Seeder
         ]);
 
         $this->saveDetailJournal([
-            'store_id' => 1,
             'account_code' => $kas,
             'journal_id' => $journalId,
             'debit' => 1000000,
@@ -42,7 +39,6 @@ class JournalSeeder extends Seeder
         ]);
 
         $this->saveDetailJournal([
-            'store_id' => 1,
             'account_code' => $modal,
             'journal_id' => $journalId,
             'debit' => 0,
@@ -50,7 +46,6 @@ class JournalSeeder extends Seeder
         ]);
         // ============================================
         $journalId = $this->saveJournal([
-            'store_id' => 1,
             'transaction_number' => 'JournalUmum#1002',
             'journal_type_id' => 5,
             'date' => Time::now(),
@@ -58,7 +53,6 @@ class JournalSeeder extends Seeder
         ]);
 
         $this->saveDetailJournal([
-            'store_id' => 1,
             'account_code' => '12003',
             'journal_id' => $journalId,
             'debit' => 15000000,
@@ -66,7 +60,6 @@ class JournalSeeder extends Seeder
         ]);
 
         $this->saveDetailJournal([
-            'store_id' => 1,
             'account_code' => $bankBRI,
             'journal_id' => $journalId,
             'debit' => 0,
@@ -74,7 +67,7 @@ class JournalSeeder extends Seeder
         ]);
         // ====================================================
         // $journalId = $this->saveJournal([
-        //     'store_id' => 1,
+        
         //     'transaction_number' => 'JournalUmum#1003',
         //     'journal_type_id' => 5,
         //     'date' => Time::now(),
@@ -82,7 +75,7 @@ class JournalSeeder extends Seeder
         // ]);
 
         // $this->saveDetailJournal([
-        //     'store_id' => 1,
+        
         //     'account_code' => $bankBRI,
         //     'journal_id' => $journalId,
         //     'debit' => 0,
@@ -90,7 +83,7 @@ class JournalSeeder extends Seeder
         // ]);
 
         // $this->saveDetailJournal([
-        //     'store_id' => 1,
+        
         //     'account_code' => $biayaKaryawan,
         //     'journal_id' => $journalId,
         //     'debit' => 15000000,
@@ -98,7 +91,7 @@ class JournalSeeder extends Seeder
         // ]);
         // // ===============================
         // $journalId = $this->saveJournal([
-        //     'store_id' => 1,
+        
         //     'transaction_number' => 'JournalUmum#1004',
         //     'journal_type_id' => 5,
         //     'date' => Time::now(),
@@ -106,7 +99,7 @@ class JournalSeeder extends Seeder
         // ]);
 
         // $this->saveDetailJournal([
-        //     'store_id' => 1,
+        
         //     'account_code' => $bankBRI,
         //     'journal_id' => $journalId,
         //     'debit' => 0,
@@ -114,7 +107,7 @@ class JournalSeeder extends Seeder
         // ]);
 
         // $this->saveDetailJournal([
-        //     'store_id' => 1,
+        
         //     'account_code' => $biayaListrik,
         //     'journal_id' => $journalId,
         //     'debit' => 500000,
@@ -126,6 +119,7 @@ class JournalSeeder extends Seeder
     {
         $journals = new JournalModel();
         $journals->insert([
+            'user_id' => 1,
             'store_id' => 1,
             'journal_type_id' => $data['journal_type_id'] ?? random_int(1, 6),
             'transaction_number' => $data['transaction_number'],
@@ -140,7 +134,6 @@ class JournalSeeder extends Seeder
     {
         $transactions = new JournalTransactionModel();
         $data = [
-            'store_id' => $array['store_id'],
             'account_code' => $array['account_code'],
             'journal_id' => $array['journal_id'],
             'debit' => $array['debit'],

@@ -84,7 +84,7 @@
                         </div>
                         <div class="widget-content-left  ml-3 header-user-info">
                             <div class="widget-heading">
-                                <?= "fsdfs" ?>
+                                <?= user()->username ?>
                             </div>
                             <div class="widget-subheading">
                                 dfsdfs

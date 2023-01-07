@@ -17,6 +17,7 @@ class JournalModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'store_id',
+        'user_id',
         'purchase_order_id',
         'sales_order_id',
         'journal_type_id',

@@ -22,10 +22,10 @@
                 </div>
             </div>
             <div class="page-title-actions">
-                <button id="journal" data-placement="bottom" class="btn-shadow btn-sm mr-3 btn btn-dark">
+                <a href="<?= base_url('purchase') ?>" data-placement="bottom" class="btn-shadow btn-sm mr-3 btn btn-dark">
                     Kembali
                     <i class="fa fa-plus"></i>
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -161,7 +161,7 @@
         table2 = $('#table-item').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '<?= base_url('purchase/item_datatable'); ?>',
+            ajax: '<?= base_url('item/item_datatable'); ?>',
             order: [],
             columns: [
                 {data: 'no', orderable: false},
@@ -192,6 +192,9 @@
                         title: 'Success',
                         text: data.message,
                     });
+                    setTimeout(function() {
+                        window.location.href = '<?= base_url('purchase') ?>';
+                    }, 1000);
                 },
                 error: function(response) {
                     const data = response.responseJSON;
