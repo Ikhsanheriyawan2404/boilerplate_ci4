@@ -38,46 +38,45 @@
                     <form id="itemForm">
 
                         <div class="row">
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <label for="vendor">Vendor <span class="text-danger">*</span></label>
-                                        <select name="vendor" id="vendor" placeholder="Vendor/Supplier" class="form-control form-control-sm">
-                                            <option selected disabled>Pilih Vendor</option>
-                                            <?php foreach($vendors as $vendor) : ?>
-                                            <option value="<?= $vendor->id ?>"><?= $vendor->name ?></option>
-                                            <?php endforeach ?>
-                                        </select>
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="vendor" class="">Metode Pembayaran <span class="text-danger">*</span></label>
-                                        <select name="vendor" id="vendor" placeholder="Vendor/Supplier" class="form-control form-control-sm">
-                                            <option selected disabled>Pilih Metode Pembayaran</option>
-                                            <option value="paid" id="paid">Cash</option>
-                                            <option value="open" id="open">Credit</option>
-                                        </select>
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="item">Pilih Item <span class="text-danger">*</span></label>
-                                        <button type="button" class="btn btn-sm btn-primary form-control" onclick="showItem()">Pilih Item</button>
-                                    </div>
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label for="vendor">Vendor <span class="text-danger">*</span></label>
+                                    <select name="vendor" id="vendor" placeholder="Vendor/Supplier" class="form-control form-control-sm">
+                                        <option selected disabled>Pilih Vendor</option>
+                                        <?php foreach($vendors as $vendor) : ?>
+                                        <option value="<?= $vendor->id ?>"><?= $vendor->name ?></option>
+                                        <?php endforeach ?>
+                                    </select>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <label for="transaction_date" class="">Tgl Transaksi <span class="text-danger">*</span></label>
-                                        <input name="transaction_date" id="transaction_date" type="date" class="form-control form-control-sm">
-                                    </div>
-                                    <div class="position-relative form-group">
-                                        <label for="overdue_date" class="">Tgl Jatuh Tempo <span class="text-danger">*</span></label>
-                                        <input name="overdue_date" id="overdue_date" type="date" class="form-control form-control-sm">
-                                    </div>
+                                <div class="position-relative form-group">
+                                    <label for="payment" class="">Metode Pembayaran <span class="text-danger">*</span></label>
+                                    <select name="payment" id="payment"class="form-control form-control-sm">
+                                        <option selected disabled>Pilih Metode Pembayaran</option>
+                                        <option value="paid" id="paid">Cash</option>
+                                        <option value="open" id="open">Credit</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="position-relative form-group">
-                                        <label for="description" class="">Deskripsi</label>
-                                        <textarea name="description" id="description" placeholder="Deskripsi..." class="form-control form-control-sm"></textarea>
-                                    </div>
+                                <div class="position-relative form-group">
+                                    <label for="item">Pilih Item <span class="text-danger">*</span></label>
+                                    <button type="button" class="btn btn-sm btn-primary form-control" onclick="showItem()">Pilih Item</button>
                                 </div>
-                            </form>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label for="transaction_date" class="">Tgl Transaksi <span class="text-danger">*</span></label>
+                                    <input name="transaction_date" id="transaction_date" type="date" class="form-control form-control-sm">
+                                </div>
+                                <div class="position-relative form-group">
+                                    <label for="overdue_date" class="">Tgl Jatuh Tempo <span class="text-danger">*</span></label>
+                                    <input name="overdue_date" id="overdue_date" type="date" class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label for="description" class="">Deskripsi</label>
+                                    <textarea name="description" id="description" placeholder="Deskripsi..." class="form-control form-control-sm"></textarea>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -121,6 +120,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -157,7 +157,7 @@
     }
 
     let table1, table2;
-    $(function () {
+    $(document).ready(function () {
         table2 = $('#table-item').DataTable({
             processing: true,
             serverSide: true,
@@ -171,71 +171,76 @@
                 {data: 'action', orderable: false},
             ]
         });
+
+        $('body').on('click', '#createPurchase', function(e) {
+            e.preventDefault();
+            $('#createPurchase').attr('disabled', 'disabled');
+            $('#createPurchase').html('Simpan ...');
+            var formData = new FormData($('#itemForm')[0]);
+            $.ajax({
+                data: formData,
+                url: "<?= base_url('purchase') ?>",
+                contentType : false,
+                processData : false,
+                type: "POST",
+                success: function (data) {
+                    console.log(data)
+                    $('#createPurchase').removeAttr('disabled');
+                    $('#createPurchase').html("Simpan");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                    });
+                },
+                error: function(response) {
+                    const data = response.responseJSON;
+                    console.log(data)
+                    $('#createPurchase').removeAttr('disabled');
+                    $('#createPurchase').html("Simpan");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oppss',
+                        text: data.message,
+                    });
+                    $.each(data.errors, function (index, value) {
+                        toastr.error(value);
+                    });
+                }
+            });
+        })
+
+        $('body').on('click', '.chooseItem', function(e) {
+            e.preventDefault();
+            hideItem();
+            var id = $(this).data('id');
+            $.get("<?= base_url('purchase') ?>" + "/" + id + '/item', function(data) {
+
+                var tr = $('<tr>');
+                for (var i = 0; i < 7; i++) {
+                    var td = $('<td>').html(data[i]);
+                    tr.append(td);
+                }
+                $('#table-order tbody').append(tr);
+
+            });
+        })
+
+        $('body').on('click', '.removeItem', function(e) {
+            e.preventDefault();
+            $(this).parents('tr').remove();
+        });
     });
 
     function showItem() {
         $('#modalItem').modal('show');
     }
 
-    $(document).on('click', '#createPurchase', function(e) {
-        e.preventDefault();
-        var formData = new FormData($('#itemForm')[0]);
-        $.ajax({
-            data: formData,
-            url: "<?= base_url('purchase') ?>",
-            contentType : false,
-            processData : false,
-            type: "POST",
-            success: function (data) {
-                console.log(data)
-                $('#saveBtn').attr('disabled', 'disabled');
-                $('#saveBtn').html('Simpan ...');
-                $('#itemForm').trigger("reset");
-                $('#modal-md').modal('hide');
-                if (data.status) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: data.message,
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oppss',
-                        text: 'Coba isi kembali data dengan benar!',
-                    });
-                    $.each(data.message, function (index, value) {
-                        toastr.error(value);
-                    });
-                }
-            },
-        });
-    })
-
     function hideItem() {
         $('#modalItem').modal('hide');
     }
 
-    $(document).on('click', '.chooseItem', function(e) {
-        hideItem();
-        var id = $(this).data('id');
-        $.get("<?= base_url('purchase') ?>" + "/" + id + '/item', function(data) {
-
-            var tr = document.createElement("tr");
-            for (var i = 0; i < 7; i++) {
-                var td = document.createElement("td");
-                td.innerHTML = data[i];
-                tr.appendChild(td);
-            }
-
-            document.querySelector("tbody").appendChild(tr);
-        });
-    })
-
-    $(document).on('click', '.removeItem', function(e) {
-        e.preventDefault();
-        $(this).parents('tr').remove();
-    });
+    
 
 </script>
 

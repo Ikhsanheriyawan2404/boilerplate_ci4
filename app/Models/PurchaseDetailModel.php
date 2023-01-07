@@ -17,7 +17,12 @@ class PurchaseDetailModel extends Model
     protected $allowedFields    = ['purchase_order_id', 'qty', 'item_id', 'total_price'];
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = [
+        'purchase_order_id' => 'required',
+        'qty' => 'required',
+        'item_id' => 'required',
+        'total_price' => 'required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

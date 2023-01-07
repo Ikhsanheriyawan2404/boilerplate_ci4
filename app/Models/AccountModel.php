@@ -34,7 +34,11 @@ class AccountModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = [
+        'code' => 'required|is_unique[accounts.code]',
+        'name' => 'required|is_unique[accounts.name]',
+        'subgroup_account_id' => 'required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;

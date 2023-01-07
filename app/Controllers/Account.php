@@ -11,6 +11,9 @@ use App\Controllers\BaseController;
 class Account extends BaseController
 {
     use ResponseTrait;
+
+    protected $accounts;
+    protected $subgroup_account;
     
     public function __construct()
     {

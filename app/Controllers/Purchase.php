@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 use Config\Database;
 use App\Models\ItemModel;
+use App\Helpers\ApiResponse;
+    use InvalidArgumentException;
 use App\Models\PurchaseOrderModel;
 use CodeIgniter\API\ResponseTrait;
 use Hermawan\DataTables\DataTable;
 use App\Controllers\BaseController;
-use App\Models\BusinessPartnerModel;
 use App\Models\PurchaseDetailModel;
+use App\Models\BusinessPartnerModel;
 
 class Purchase extends BaseController
 {
@@ -20,6 +22,7 @@ class Purchase extends BaseController
     protected $vendors;
     protected $items;
     protected $db;
+    protected $responseApi;
 
     public function __construct()
     {
@@ -28,6 +31,7 @@ class Purchase extends BaseController
         $this->vendors = new BusinessPartnerModel();
         $this->items = new ItemModel();
         $this->db = Database::connect();
+        $this->responseApi = new ApiResponse();
     }
 
     public function datatables()
@@ -102,29 +106,84 @@ class Purchase extends BaseController
     {
         $item = $this->items->find($itemId);
         $row=[];
-        $row[] = '<input name="item_code" type="hidden" value="'.$item->item_code.'"><span class="btn btn-success">' . $item->item_code . '</span';
+        $row[] = '<input name="item_code[]" type="hidden" value="'.$item->id.'"><span class="btn btn-success">' . $item->item_code . '</span';
         $row[] = $item->name;
-        $row[] = '<input type="number" name="qty" class="form-control form-control-sm" value="0">';
-        $row[] = '<input type="number" name="purchase_price" class="form-control form-control-sm" value="'.$item->purchase_price.'">';
-        $row[] = '<input type="number" name="discount" class="form-control form-control-sm" value="0">';
-        $row[] = '<input type="number" name="total_price" class="form-control form-control-sm" value="0">';
+        $row[] = '<input type="number" name="qty[]" class="form-control form-control-sm" value="0">';
+        $row[] = '<input type="number" name="purchase_price[]" class="form-control form-control-sm" value="'.$item->purchase_price.'">';
+        $row[] = '<input type="number" name="discount[]" class="form-control form-control-sm" value="0">';
+        $row[] = '<input type="number" name="total_price[]" class="form-control form-control-sm" value="0" readonly>';
         $row[] = '<button class="btn btn-sm btn-danger removeItem">-</button>';
         
-        return $this->respond($row);
+        return $this->response->setJSON($row);
     }
 
     public function create()
-    {
+    {   
         $this->db->transBegin();
 		try {
-            return $this->respond($this->request->getPost());
-			$this->purchases->insert($this->request->getPost());
-			$this->purchaseDetails->insert($this->request->getPost());
-			
+            $data = [
+                'business_partner_id' => $this->request->getPost('vendor'),
+                'transaction_date' => $this->request->getPost('transaction_date'),
+                'overdue_date' => $this->request->getPost('overdue_date'),
+                'description' => $this->request->getPost('description'),
+                'store_id' => 1,
+                'status' => 'open',
+            ];
+            if ($this->purchases->save($data) === false) {
+                $errorMessages = [];
+                foreach ($this->purchases->errors() as $error) {
+                    $errorMessages[] = $error;
+                }
+                throw new InvalidArgumentException(json_encode($errorMessages), 422);
+            }
+
+            $totalRequestItem = $this->request->getPost('item_code');
+            if ($totalRequestItem == null) {
+                throw new InvalidArgumentException('Item tidak boleh kosong', 400);
+            } else {
+                for ($i = 0; $i < count($totalRequestItem); $i++) {
+                    $data = [
+                        'purchase_order_id' => $this->purchases->getInsertID(),
+                        'item_id' => $this->request->getPost('item_code')[$i],
+                        'qty' => $this->request->getPost('qty')[$i],
+                        'purchase_price' => $this->request->getPost('purchase_price')[$i],
+                        'discount' => $this->request->getPost('discount')[$i],
+                        'total_price' => $this->request->getPost('total_price')[$i],
+                    ];
+    
+                    if ($this->purchaseDetails->save($data) === false) {
+                        $errorMessages = [];
+                        foreach ($this->purchaseDetails->errors() as $error) {
+                            $errorMessages[] = $error;
+                        }
+                        throw new InvalidArgumentException(json_encode($errorMessages), 422);
+                    }
+                }
+            }
+
 			$this->db->transCommit();
-		} catch (\Exception $e) {
+
+		} catch (InvalidArgumentException $e) {
+
 			$this->db->transRollback();
+
+            $errorMessages = json_decode($e->getMessage());
+            if ($errorMessages == null) {
+                $validationFailed = $e->getMessage();
+            } else {
+                $validationFailed = 'Validasi Gagal';
+            }
+
+            return $this->response->setJSON([
+                'message' => $validationFailed,
+                'errors' => $errorMessages ?? null,
+            ])->setStatusCode($e->getCode());
 		}
+
+        return $this->response->setJSON([
+            'message' => 'Berhasil Menambahkan Order Purchase',
+            'data' => $this->request->getPost(),
+        ])->setStatusCode(200);
     }
 
     public function purchaseDetail($id = null)
