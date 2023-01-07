@@ -32,6 +32,6 @@ class BusinessPartnerSeeder extends Seeder
             ]
         ];
 
-    $model->insertBatch($data);
+        $model->insertBatch($data);
     }
 }

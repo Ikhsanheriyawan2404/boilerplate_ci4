@@ -11,6 +11,8 @@ class Item extends BaseController
 {
     use ResponseTrait;
     
+    protected $items;
+
     public function __construct()
     {
         $this->items = new ItemModel();
@@ -63,5 +65,19 @@ class Item extends BaseController
             'message' => 'Data berhasil disimpan',
             'status' => true,
         ]);
+    }
+
+    public function item_datatable()
+    {
+        $builder = $this->items->select('id, name, item_code, stock, purchase_price, selling_price');
+        return DataTable::of($builder)
+            ->addNumbering('no')
+            ->add('action', function ($row) {
+                $btn = '<button class="btn btn-sm btn-primary chooseItem" data-id="'.$row->id.'">
+                Pilih <i class="fa fa-check-circle">
+                </button>';
+                return $btn;
+            }, 'last')
+            ->toJson(true);
     }
 }

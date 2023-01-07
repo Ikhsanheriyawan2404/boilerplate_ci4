@@ -22,7 +22,6 @@ class Purchase extends BaseController
     protected $vendors;
     protected $items;
     protected $db;
-    protected $responseApi;
 
     public function __construct()
     {
@@ -31,7 +30,6 @@ class Purchase extends BaseController
         $this->vendors = new BusinessPartnerModel();
         $this->items = new ItemModel();
         $this->db = Database::connect();
-        $this->responseApi = new ApiResponse();
     }
 
     public function datatables()
@@ -146,7 +144,7 @@ class Purchase extends BaseController
                         'purchase_order_id' => $this->purchases->getInsertID(),
                         'item_id' => $this->request->getPost('item_code')[$i],
                         'qty' => $this->request->getPost('qty')[$i],
-                        'purchase_price' => $this->request->getPost('purchase_price')[$i],
+                        'price' => $this->request->getPost('purchase_price')[$i],
                         'discount' => $this->request->getPost('discount')[$i],
                         'total_price' => $this->request->getPost('total_price')[$i],
                     ];

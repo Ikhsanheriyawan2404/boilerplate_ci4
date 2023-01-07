@@ -53,28 +53,29 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->resource('store');
 
     $routes->get('item/datatables', 'Item::datatables');
+    $routes->get('item/item_datatable', 'Item::item_datatable');
     $routes->resource('item');
-
+    
     $routes->get('warehouse/datatables', 'Warehouse::datatables');
     $routes->resource('warehouse');
-
+    
     $routes->get('account/datatables', 'Account::datatables');
     $routes->resource('account');
-
+    
     $routes->get('journal/datatables', 'Journal::datatables');
     $routes->resource('journal');
-
+    
     $routes->get('journal/datatables', 'Journal::datatables');
     $routes->resource('journal');
-
+    
     $routes->get('purchase/datatables', 'Purchase::datatables');
-    $routes->get('purchase/item_datatable', 'Purchase::item_datatable');
     $routes->get('purchase/(:any)/item', 'Purchase::getItem/$1');
     $routes->get('purchase/(:any)/purchase-detail', 'Purchase::purchaseDetail/$1');
     $routes->get('purchase/(:any)/journal-detail', 'Purchase::journalDetail/$1');
     $routes->resource('purchase');
-
+    
     $routes->get('sale/datatables', 'Sale::datatables');
+    $routes->get('sale/(:any)/item', 'Sale::getItem/$1');
     $routes->get('sale/(:any)/sales-detail', 'Sale::salesDetail/$1');
     $routes->get('sale/(:any)/journal-detail', 'Sale::journalDetail/$1');
     $routes->resource('sale');

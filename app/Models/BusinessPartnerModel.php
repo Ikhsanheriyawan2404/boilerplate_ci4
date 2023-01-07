@@ -14,7 +14,7 @@ class BusinessPartnerModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'email', 'phone_number', 'address', 'group_business_partner_id'];
+    protected $allowedFields    = ['name', 'email', 'phone_number', 'address', 'group_business_partner_id', 'type'];
 
     // Dates
     protected $useTimestamps = true;

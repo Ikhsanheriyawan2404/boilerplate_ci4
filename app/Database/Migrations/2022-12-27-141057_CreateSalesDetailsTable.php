@@ -26,9 +26,23 @@ class CreateSalesDetailsTable extends Migration
 				'type' => 'DECIMAL',
                 'constraint' => '15,2'
 			],
+			'discount' => [
+				'type' => 'INT',
+				'default' => 0,
+			],
+			'discount' => [
+				'type' => 'INT',
+				'default' => 0,
+			],
+			'price' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2',
+				'unsigned' => true,
+			],
 			'total_price' => [
 				'type' => 'DECIMAL',
-                'constraint' => '15,2'
+                'constraint' => '15,2',
+				'unsigned' => true,
 			],
 		]);
 

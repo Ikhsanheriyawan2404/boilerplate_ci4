@@ -34,7 +34,12 @@ class SalesOrderModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = [
+        'business_partner_id' => 'required',
+        'transaction_date' => 'required',
+        'overdue_date' => 'required',
+        // 'status' => 'required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
