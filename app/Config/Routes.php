@@ -80,6 +80,11 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
     $routes->get('sale/(:any)/journal-detail', 'Sale::journalDetail/$1');
     $routes->resource('sale');
     
+    $routes->get('customer/datatables', 'Customer::datatables');
+    $routes->resource('customer');
+    $routes->get('vendor/datatables', 'Vendor::datatables');
+    $routes->resource('vendor');
+    
     $routes->get('report', 'Report::index');
 
     $routes->resource('user');

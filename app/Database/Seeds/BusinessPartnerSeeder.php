@@ -10,7 +10,11 @@ class BusinessPartnerSeeder extends Seeder
     public function run()
     {
         $this->db->table('group_business_partners')->insert([
-            'name' => 'PT Group'
+            'name' => 'PT Group Hartanah'
+        ]);
+
+        $this->db->table('group_business_partners')->insert([
+            'name' => 'PT ABC Multi Group'
         ]);
 
         $model = new BusinessPartnerModel();

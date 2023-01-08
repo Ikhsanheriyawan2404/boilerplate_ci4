@@ -105,13 +105,13 @@
                 </a>
                 <ul>
                     <li>
-                        <a href="<?= site_url('customers') ?>">
+                        <a href="<?= site_url('customer') ?>">
                             <i class="metismenu-icon"></i>
                             Pelanggan
                         </a>
                     </li>
                     <li>
-                        <a href="<?= site_url('vendors') ?>">
+                        <a href="<?= site_url('vendor') ?>">
                             <i class="metismenu-icon"></i>
                             Vendor
                         </a>

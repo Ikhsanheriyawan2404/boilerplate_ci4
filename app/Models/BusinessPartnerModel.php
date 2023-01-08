@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Config\Database;
 use CodeIgniter\Model;
 
 class BusinessPartnerModel extends Model
@@ -24,8 +25,23 @@ class BusinessPartnerModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules = [
+        'name' => 'required',
+        'email' => 'required|valid_email',
+        'phone_number' => 'required',
+    ];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
+
+    public function findById($id)
+    {
+        $db = Database::connect();
+        return $db->table('business_partners as bp')
+            ->select('bp.id, bp.name, email, phone_number, address,
+                group_business_partners.name as group_name')
+            ->where('bp.id', $id)
+            ->join('group_business_partners', 'group_business_partners.id = bp.group_business_partner_id', 'left')
+            ->get()->getRowObject();
+    }
 }
