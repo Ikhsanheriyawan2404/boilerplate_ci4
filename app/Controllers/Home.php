@@ -6,9 +6,15 @@ class Home extends BaseController
 {
     public function index()
     {
-        return view('home', [
-            'title' => 'Home'
-        ]);
+        if (in_groups('Superadmin')) {
+            return view('dashboard', [
+                'title' => 'Home - Superadmin'
+            ]);
+        } else {
+            return view('home', [
+                'title' => 'Home'
+            ]);
+        }
     }
 
     public function dashboard()
