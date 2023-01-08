@@ -92,6 +92,7 @@ class CreateAuthTables extends Migration
             'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'name'        => ['type' => 'varchar', 'constraint' => 255],
             'description' => ['type' => 'varchar', 'constraint' => 255],
+            'locked' => ['type' => 'ENUM', 'constraint' => ['true', 'false'], 'default' => 'false'],
         ];
 
         $this->forge->addField($fields);

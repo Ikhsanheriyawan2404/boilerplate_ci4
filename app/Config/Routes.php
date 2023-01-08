@@ -33,62 +33,68 @@ $routes->set404Override();
  * --------------------------------------------------------------------
  */
 
-
- // Load the reserved routes from Auth.php
 $config         = config(App\Config\Auth::class);
 $reservedRoutes = $config->reservedRoutes;
 
-// Login/out
 $routes->get($reservedRoutes['login'], 'AuthController::login', ['as' => $reservedRoutes['login']]);
 $routes->post($reservedRoutes['login'], 'AuthController::attemptLogin');
 $routes->post($reservedRoutes['logout'], 'AuthController::logout');
 
 $routes->group('', ['filter' => 'login'], function ($routes) {
+
     $routes->get('/', 'Home::index');
-    $routes->get('dashboard', 'Home::dashboard', ['filter' => 'permission:developer-module']);
-    $routes->get('company/datatables', 'Company::datatables');
-    $routes->resource('company');
 
-    $routes->get('store/datatables', 'Store::datatables');
-    $routes->resource('store');
+    $routes->group('', ['filter' => 'permission:developer-module'], function ($routes) {
+        $routes->get('dashboard', 'Home::dashboard');
+        
+        $routes->get('company/datatables', 'Company::datatables');
+        $routes->resource('company');
+        
+        $routes->get('store/datatables', 'Store::datatables');
+        $routes->resource('store');
 
-    $routes->get('item/datatables', 'Item::datatables');
-    $routes->get('item/item_datatable', 'Item::item_datatable');
-    $routes->resource('item');
+        $routes->resource('user');
+        $routes->resource('group');
+    });
     
-    $routes->get('warehouse/datatables', 'Warehouse::datatables');
-    $routes->resource('warehouse');
+    $routes->group('', ['filter' => 'permission:client-module'], function ($routes) {
     
-    $routes->get('account/datatables', 'Account::datatables');
-    $routes->resource('account');
-    
-    $routes->get('journal/datatables', 'Journal::datatables');
-    $routes->resource('journal');
-    
-    $routes->get('journal/datatables', 'Journal::datatables');
-    $routes->resource('journal');
-    
-    $routes->get('purchase/datatables', 'Purchase::datatables');
-    $routes->get('purchase/(:any)/item', 'Purchase::getItem/$1');
-    $routes->get('purchase/(:any)/purchase-detail', 'Purchase::purchaseDetail/$1');
-    $routes->get('purchase/(:any)/journal-detail', 'Purchase::journalDetail/$1');
-    $routes->resource('purchase');
-    
-    $routes->get('sale/datatables', 'Sale::datatables');
-    $routes->get('sale/(:any)/item', 'Sale::getItem/$1');
-    $routes->get('sale/(:any)/sales-detail', 'Sale::salesDetail/$1');
-    $routes->get('sale/(:any)/journal-detail', 'Sale::journalDetail/$1');
-    $routes->resource('sale');
-    
-    $routes->get('customer/datatables', 'Customer::datatables');
-    $routes->resource('customer');
-    $routes->get('vendor/datatables', 'Vendor::datatables');
-    $routes->resource('vendor');
-    
-    $routes->get('report', 'Report::index');
+        $routes->get('item/datatables', 'Item::datatables');
+        $routes->get('item/item_datatable', 'Item::item_datatable');
+        $routes->resource('item');
+        
+        $routes->get('warehouse/datatables', 'Warehouse::datatables');
+        $routes->resource('warehouse');
+        
+        $routes->get('account/datatables', 'Account::datatables');
+        $routes->resource('account');
+        
+        $routes->get('journal/datatables', 'Journal::datatables');
+        $routes->resource('journal');
+        
+        $routes->get('journal/datatables', 'Journal::datatables');
+        $routes->resource('journal');
+        
+        $routes->get('purchase/datatables', 'Purchase::datatables');
+        $routes->get('purchase/(:any)/item', 'Purchase::getItem/$1');
+        $routes->get('purchase/(:any)/purchase-detail', 'Purchase::purchaseDetail/$1');
+        $routes->get('purchase/(:any)/journal-detail', 'Purchase::journalDetail/$1');
+        $routes->resource('purchase');
+        
+        $routes->get('sale/datatables', 'Sale::datatables');
+        $routes->get('sale/(:any)/item', 'Sale::getItem/$1');
+        $routes->get('sale/(:any)/sales-detail', 'Sale::salesDetail/$1');
+        $routes->get('sale/(:any)/journal-detail', 'Sale::journalDetail/$1');
+        $routes->resource('sale');
+        
+        $routes->get('customer/datatables', 'Customer::datatables');
+        $routes->resource('customer');
+        $routes->get('vendor/datatables', 'Vendor::datatables');
+        $routes->resource('vendor');
+        
+        $routes->get('report', 'Report::index');
+    });
 
-    $routes->resource('user');
-    $routes->resource('group');
     $routes->get('transactions', 'Transaction::index');
 });
 

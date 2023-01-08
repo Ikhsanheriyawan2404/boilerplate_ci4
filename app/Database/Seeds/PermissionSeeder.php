@@ -10,11 +10,9 @@ class PermissionSeeder extends Seeder
     {
         $data = [
 			'developer-module',
-			'example1-module',
-			'example2-module',
-			'example3-module',
-			'user-module',
-			'group-module',
+			'client-module',
+			'manager-module',
+			'auditor-module',
 		];
 
 		foreach ($data as $value) {

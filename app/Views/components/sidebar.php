@@ -9,7 +9,8 @@
                     Dashboard
                 </a>
             </li>
-            <li class="app-sidebar__heading">Developer</li>
+            <li class="app-sidebar__heading">Menu</li>
+            <?php if (has_permission('developer-module')) : ?>
             <li>
                 <a href="#" class="<?= $uri->getSegment(1) == 'company' ? 'mm-active' : '' ?>">
                     <i class="metismenu-icon pe-7s-diamond"></i>
@@ -37,6 +38,8 @@
                     </li>
                 </ul>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('developer-module')) : ?>
             <li>
                 <a href="#">
                     <i class="metismenu-icon pe-7s-diamond"></i>
@@ -58,6 +61,8 @@
                     </li>
                 </ul>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
             <li>
                 <a href="#">
                     <i class="metismenu-icon pe-7s-diamond"></i>
@@ -85,18 +90,24 @@
                     </li>
                 </ul>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
             <li>
                 <a href="<?= base_url('purchase') ?>">
                     <i class="metismenu-icon pe-7s-display2"></i>
                     Purchases Order
                 </a>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
             <li>
                 <a href="<?= base_url('sale') ?>">
                     <i class="metismenu-icon pe-7s-display2"></i>
                     Sales Order
                 </a>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
             <li>
                 <a href="#">
                     <i class="metismenu-icon pe-7s-diamond"></i>
@@ -118,6 +129,8 @@
                     </li>
                 </ul>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
             <li>
                 <a href="#">
                     <i class="metismenu-icon pe-7s-diamond"></i>
@@ -139,18 +152,23 @@
                     </li>
                 </ul>
             </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
             <li>
                 <a href="<?= base_url('report') ?>">
                     <i class="metismenu-icon pe-7s-display2"></i>
                     Report
                 </a>
             </li>
+            <?php endif ?>
             <li class="app-sidebar__heading">PRO Version</li>
             <li>
-                <a href="https://dashboardpack.com/theme-details/architectui-dashboard-html-pro/" target="_blank">
-                    <i class="metismenu-icon pe-7s-graph2">
-                    </i>
-                    Upgrade to PRO
+                <form id="logout-form" action="<?= base_url('logout') ?>" method="post">
+                    <?= csrf_field() ?>
+                </form>
+                <a onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <i class="metismenu-icon pe-7s-graph2"></i>
+                    Logout
                 </a>
             </li>
         </ul>

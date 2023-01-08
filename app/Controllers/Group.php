@@ -7,6 +7,10 @@ use Myth\Auth\Models\{GroupModel, PermissionModel};
 
 class Group extends ResourceController
 {
+    protected $db;
+    protected $groups;
+    protected $permissions;
+    
     public function __construct()
     {
         $this->groups = new GroupModel();
@@ -16,8 +20,9 @@ class Group extends ResourceController
 
     public function index()
     {
-        return view('super_admin/groups/index', [
+        return view('groups/index', [
             'groups' => $this->groups->findAll(),
+            'title' => 'Group',
         ]);
     }
 
@@ -29,8 +34,9 @@ class Group extends ResourceController
 
     public function new()
     {
-        return view('super_admin/groups/create', [
+        return view('groups/create', [
             'permissions' => $this->permissions->findAll(),
+            'title' => 'Create Group',
         ]);
     }
 
@@ -78,10 +84,11 @@ class Group extends ResourceController
             $permissionGroup = [];
         }
 
-        return view('super_admin/groups/edit', [
+        return view('groups/edit', [
             'group' => $this->groups->find($id),
             'permissions' => $this->permissions->findAll(),
             'permissionGroup' => $permissionGroup,
+            'title' => 'Edit Group',
         ]);
     }
 

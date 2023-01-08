@@ -25,7 +25,7 @@ class GroupSeeder extends Seeder
 			'description' => 'Level Manager',
 		]);
 
-		$manager = $permissions->findAll();
+		$manager = $permissions->where('id !=', 1)->findAll();
 		foreach ($manager as $permission) {
 			$groups->addPermissionToGroup($permission->id, $groups->getInsertID());
 		}
@@ -36,7 +36,7 @@ class GroupSeeder extends Seeder
 			'description' => 'Level Auditor',
 		]);
 		$auditor = $permissions->whereIn('name', [
-			'post-module', 'category-module'
+			'client-module', 'auditor-module'
 		])->findAll();
 
 		foreach ($auditor as $permission) {

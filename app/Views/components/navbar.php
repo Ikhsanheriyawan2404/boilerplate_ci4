@@ -87,7 +87,9 @@
                                 <?= user()->username ?>
                             </div>
                             <div class="widget-subheading">
-                                dfsdfs
+                                <?php foreach (user()->getRoles() as $role) {
+                                    echo $role;
+                                } ?>
                             </div>
                         </div>
                         <div class="widget-content-right header-user-info ml-3">
