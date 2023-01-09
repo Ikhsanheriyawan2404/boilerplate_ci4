@@ -56,10 +56,6 @@
                                         <option value="open" id="open">Credit</option>
                                     </select>
                                 </div>
-                                <div class="position-relative form-group">
-                                    <label for="item">Pilih Item <span class="text-danger">*</span></label>
-                                    <button type="button" class="btn btn-sm btn-primary form-control" onclick="showItem()">Pilih Item</button>
-                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
@@ -75,6 +71,18 @@
                                 <div class="position-relative form-group">
                                     <label for="description" class="">Deskripsi</label>
                                     <textarea name="description" id="description" placeholder="Deskripsi..." class="form-control form-control-sm"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label for="item">Pilih Item <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Pilih item" aria-label="Pilih item" disabled>
+                                        <button type="button" class="btn btn-sm btn-primary form-control" onclick="showItem()">Pilih Item</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -102,11 +110,59 @@
                             </div>
                         </div>
 
+                        <hr class="border border-primary border-3 opacity-75">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th colspan="6" class="text-right"><h4><b>P#000001</b></h4></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                <td colspan="2"><h6>Sub Total</h6></td>
+                                                <td id="subtotal_price"><h6>0</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <div class="position-relative form-group">
+                                                        <label for="discount">Potongan
+                                                        <div role="group" class="btn-group-sm btn-group btn-group-toggle" data-toggle="buttons">
+                                                            <label class="btn btn-primary">
+                                                                <input type="radio" name="options" id="percent" autocomplete="off" checked="">
+                                                                %
+                                                            </label>
+                                                            <label class="btn btn-primary">
+                                                                <input type="radio" name="options" id="rupiah" autocomplete="off">
+                                                                Rp.
+                                                            </label>
+                                                        </div>
+                                                        </label>
+                                                        <input type="text" name="discount" id="discount" class="form-control form-control-sm ">
+                                                    </div>
+                                                </td>
+                                                <td colspan="2"><h6>Potongan : </h6></td>
+                                                <td id="discount_price"><h6>0</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                    <td colspan="2"><h4>Total</h4></td>
+                                                <td id="total_price"><h6>0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-12">
+                                <hr>
                                 <div class="d-flex justify-content-end">
                                     <div class="mr-2">
-                                        <button class="btn btn-secondary btn-sm">CANCEL</button>
+                                        <a href="<?= base_url('purchase') ?>" class="btn btn-secondary btn-sm">CANCEL</a>
                                     </div>
                                     <div class="btn-group">
                                         <button class="btn btn-primary btn-sm" id="createPurchase">SIMPAN</button>
@@ -232,6 +288,68 @@
         $('body').on('click', '.removeItem', function(e) {
             e.preventDefault();
             $(this).parents('tr').remove();
+        });
+
+        $('body').on('input', '.qty', function () {
+            let id = $(this).data('id');
+            let qty = parseInt($(this).val());
+
+            if (qty < 0) {
+                alert('Wajib diisi');
+                return;
+            }
+
+            let purchasePrice = $('.purchase_price[data-id=' + id + ']').val();
+            let discount = $('.discount[data-id=' + id + ']').val() / 100;
+            let subtotal;
+            if (discount > 0) {
+                subtotal = qty * purchasePrice * discount;
+            } else {
+                subtotal = qty * purchasePrice;
+            }
+            $(`.subtotal[data-id="${id}"]`).val(subtotal);
+        });
+
+        $('body').on('input', '.purchase_price', function () {
+            let id = $(this).data('id');
+            let purchasePrice = parseInt($(this).val());
+
+            if (purchasePrice < 0) {
+                alert('Wajib diisi');
+                return;
+            }
+
+            let qty = $('.qty[data-id=' + id + ']').val();
+            let discount = $('.discount[data-id=' + id + ']').val() / 100;
+            let subtotal;
+            if (discount > 0) {
+                subtotal = qty * purchasePrice * discount;
+            } else {
+                subtotal = qty * purchasePrice;
+            }
+            $(`.subtotal[data-id="${id}"]`).val(subtotal);
+            console.log('subtotal :' + subtotal)
+        });
+
+        $('body').on('input', '.discount', function () {
+            let id = $(this).data('id');
+            let discount = parseInt($(this).val()) / 100;
+
+            // if (!discount < 1 || !discount > 100) {
+            //     alert('Discount must be a number between 1 and 100');
+            //     return;
+            // }
+
+            let qty = $('.qty[data-id=' + id + ']').val();
+            let purchasePrice = $('.purchase_price[data-id=' + id + ']').val();
+            let subtotal;
+            if (discount > 0) {
+                subtotal = qty * purchasePrice * discount;
+            } else {
+                subtotal = qty * purchasePrice;
+            }
+            $(`.subtotal[data-id="${id}"]`).val(subtotal);
+            console.log('subtotal :' + subtotal)
         });
     });
 

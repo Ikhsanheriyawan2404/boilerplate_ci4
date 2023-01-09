@@ -100,10 +100,10 @@ class Purchase extends BaseController
         $row=[];
         $row[] = '<input name="item_code[]" type="hidden" value="'.$item->id.'"><span class="btn btn-success">' . $item->item_code . '</span';
         $row[] = $item->name;
-        $row[] = '<input type="number" name="qty[]" class="form-control form-control-sm" value="0">';
-        $row[] = '<input type="number" name="purchase_price[]" class="form-control form-control-sm" value="'.$item->purchase_price.'">';
-        $row[] = '<input type="number" name="discount[]" class="form-control form-control-sm" value="0">';
-        $row[] = '<input type="number" name="subtotal[]" class="form-control form-control-sm" value="0" readonly>';
+        $row[] = '<input type="number" name="qty[]" data-id="'.$item->id.'" class="form-control form-control-sm qty" value="0">';
+        $row[] = '<input type="number" name="purchase_price[]" data-id="'.$item->id.'" class="form-control form-control-sm purchase_price" value="'.$item->purchase_price.'">';
+        $row[] = '<input type="number" name="discount[]" data-id="'.$item->id.'" class="form-control form-control-sm discount" value="0">';
+        $row[] = '<input type="number" name="subtotal[]" class="form-control form-control-sm subtotal" data-id="'.$item->id.'" value="0" readonly>';
         $row[] = '<button class="btn btn-sm btn-danger removeItem">-</button>';
         
         return $this->response->setJSON($row);
