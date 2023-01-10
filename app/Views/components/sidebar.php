@@ -77,6 +77,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="<?= site_url('group-item') ?>">
+                            <i class="metismenu-icon"></i>
+                            Item Group
+                        </a>
+                    </li>
+                    <li>
                         <a href="<?= site_url('warehouse') ?>">
                             <i class="metismenu-icon"></i>
                             Gudang

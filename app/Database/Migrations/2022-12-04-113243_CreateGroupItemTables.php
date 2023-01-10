@@ -18,6 +18,14 @@ class CreateGroupItemTables extends Migration
 				'type'       => 'VARCHAR',
 				'constraint' => '255',
 			],
+			'account_code'       => [
+				'type'       => 'VARCHAR',
+				'constraint' => '255',
+			],
+			'description'       => [
+				'type'       => 'TEXT',
+				'null' => true
+			],
 			'created_at'       => ['type' => 'datetime', 'null' => true],
             'updated_at'       => ['type' => 'datetime', 'null' => true],
 		]);

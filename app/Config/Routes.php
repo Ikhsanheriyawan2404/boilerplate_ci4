@@ -62,6 +62,9 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
         $routes->get('item/datatables', 'Item::datatables');
         $routes->get('item/item_datatable', 'Item::item_datatable');
         $routes->resource('item');
+
+        $routes->get('group-item/datatables', 'GroupItem::datatables');
+        $routes->resource('group-item', ['controller' => 'GroupItem']);
         
         $routes->get('warehouse/datatables', 'Warehouse::datatables');
         $routes->resource('warehouse');

@@ -10,12 +10,12 @@
                     <i class="fa fa-users icon-gradient bg-happy-itmeo">
                     </i>
                 </div>
-                <div>Data Items
+                <div>Data Group Items
                     <div class="page-title-subheading">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Items</li>
+                                <li class="breadcrumb-item active" aria-current="page">Group Items</li>
                             </ol>
                         </nav>
                     </div>
@@ -44,12 +44,8 @@
                             <thead class="bg-primary text-white">
                                 <tr>
                                     <th width="3%">No</th>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th>Stock</th>
-                                    <th>Harga Jual</th>
-                                    <th>Harga Beli</th>
-                                    <th>Group</th>
+                                    <th>Nama</th>
+                                    <th>Akun Kode</th>
                                     <th class="text-center"><i class="fa fa-cog"></i></th>
                                 </tr>
                             </thead>
@@ -91,16 +87,12 @@ $(document).ready(function() {
     let table = $('#datatables').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '<?= base_url('item/datatables'); ?>',
+        ajax: '<?= base_url('group-item/datatables'); ?>',
         order: [],
         columns: [
             {data: 'no', orderable: false},
-            {data: 'item_code'},
             {data: 'name'},
-            {data: 'stock'},
-            {data: 'selling_price'},
-            {data: 'purchase_price'},
-            {data: 'group_name'},
+            {data: 'account_code'},
             {data: 'action', orderable: false},
         ]
     });
@@ -109,10 +101,9 @@ $(document).ready(function() {
         var user_id = $(this).data('id');
         $('#detailsModal').modal('show');
         $.get("<?= base_url('user') ?>" + '/' + user_id, function(data) {
-            $('#email').html(data.email);
-            $('#username').html(data.username);
-            $('#createdAt').html(data.created_at);
-            $('#group').html(data.name);
+            $('#name').html(data.name);
+            $('#account_code').html(data.account_code);
+            $('#description').html(data.description);
         });
     });
 
@@ -124,13 +115,13 @@ $(document).ready(function() {
         $('#saveBtn').html("Simpan");
         $('#item_id').val('');
         $('#itemForm').trigger("reset");
-        $('.modal-title').html("Tambah Toko");
+        $('.modal-title').html("Tambah Group Item");
         $('#modal-md').modal('show');
     });
 
     $('body').on('click', '#editItem', function () {
         var item_id = $(this).data('id');
-        $.get("<?= base_url('item') ?>" +'/' + item_id +'/edit', function (data) {
+        $.get("<?= base_url('group-item') ?>" +'/' + item_id +'/edit', function (data) {
             $('#modal-md').modal('show');
             setTimeout(function () {
                 $('#name').focus();
@@ -140,7 +131,8 @@ $(document).ready(function() {
             $('#saveBtn').html("Simpan");
             $('#item_id').val(data.id);
             $('#name').val(data.name);
-            $('#company_id').val(data.company_id);
+            $('#description').val(data.description);
+            // $('#account_code').val(data.account_code);
         })
     });
 
@@ -149,7 +141,7 @@ $(document).ready(function() {
         var formData = new FormData($('#itemForm')[0]);
         $.ajax({
             data: formData,
-            url: "<?= base_url('item') ?>",
+            url: "<?= base_url('group-item') ?>",
             contentType : false,
             processData : false,
             type: "POST",
@@ -195,29 +187,21 @@ $(document).ready(function() {
                 <input type="hidden" name="item_id" id="item_id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="item_code">Kode Item</label>
-                        <input type="text" class="form-control form-control-sm mr-2" name="item_code" id="item_code" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="name">Nama Item</label>
+                        <label for="name">Nama Group <span class="text-danger">*</span></label>
                         <input type="text" class="form-control form-control-sm mr-2" name="name" id="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="selling_price">Harga Jual</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="selling_price" id="selling_price" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="purchase_price">Harga Beli</label>
-                        <input type="number" class="form-control form-control-sm mr-2" name="purchase_price" id="purchase_price" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="group_item_id">Group</label>
-                        <select name="group_item_id" id="group_item_id" class="form-control form-control-sm mr-2" required>
-                            <option value="">Pilih Group</option>
-                            <?php foreach ($groupItems as $group) : ?>
-                                <option value="<?= $group->id ?>"><?= $group->name ?></option>
-                            <?php endforeach; ?>
+                        <label for="account_code">Akun Kode <span class="text-danger">*</span></label>
+                        <select class="form-control form-control-sm mr-2" name="account_code" id="account_code">
+                            <option selected disabled>Pilih Akun</option>
+                            <?php foreach($accounts as $account) : ?>
+                                <option value="<?= $account->code ?>"><?= $account->name ?></option>
+                            <?php endforeach ?>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Deskripsi</label>
+                        <textarea class="form-control form-control-sm mr-2" name="description" id="description"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
