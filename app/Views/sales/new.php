@@ -240,7 +240,6 @@
         $('#modalItem').modal('hide');
     }
 
-    
 
 </script>
 

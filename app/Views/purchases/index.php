@@ -128,10 +128,12 @@
                     $('#overdue_date').html(value.overdue_date);
                     $('#payment_date').html(value.payment_date);
                     $('#purchase_desc').html(value.description);
+                    $('#total_price').html(value.total_price);
                     $('tbody#purchase').append(`<tr class="purchase">
                     <td>${value.item_name}</td>
                     <td>${value.qty}</td>
-                    <td>${value.total_price}</td>
+                    <td>${value.price}</td>
+                    <td>${value.subtotal}</td>
                 </tr>`);
                 })
             })
@@ -176,6 +178,7 @@
                             <li class="list-group-item">Tanggal Jatuh Tempo : <i id="overdue_date"></i></li>
                             <li class="list-group-item">Tanggal Pembayaran : <i id="payment_date"></i></li>
                             <li class="list-group-item">Description : <i id="purchase_desc"></i></li>
+                            <li class="list-group-item">Total : <i id="total_price"></i></li>
                         </ul>
                     </div>
                 </div>
@@ -184,6 +187,7 @@
                         <tr>
                             <th>Item Name</th>
                             <th>Qty</th>
+                            <th>Harga</th>
                             <th>Total</th>
                         </tr>
                     </thead>

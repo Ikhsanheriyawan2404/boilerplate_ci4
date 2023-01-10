@@ -24,6 +24,9 @@ class PurchaseOrderModel extends Model
         'payment_date',
         'document',
         'status',
+        'discount',
+        'subtotal',
+        'total_price',
         'description'
     ];
 
@@ -50,9 +53,9 @@ class PurchaseOrderModel extends Model
         $db = Database::connect();
         $builder = $db->table('purchase_details as pd');
         return $builder->select('
-            pd.id, pd.qty, pd.item_id, pd.total_price,
+            pd.id, pd.qty, pd.item_id, pd.subtotal, pd.price,
             items.name as item_name,
-            po.transaction_date, po.overdue_date, po.payment_date, po.description')
+            po.transaction_date, po.overdue_date, po.payment_date, po.description, po.total_price')
             ->where('purchase_order_id', $id)
             ->where('pd.purchase_order_id', $id)
             ->join('purchase_orders as po', 'pd.purchase_order_id = po.id')

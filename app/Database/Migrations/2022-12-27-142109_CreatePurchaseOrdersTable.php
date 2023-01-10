@@ -53,6 +53,12 @@ class CreatePurchaseOrdersTable extends Migration
 				'type' => 'DECIMAL',
                 'constraint' => '15,2',
 				'unsigned' => true,
+				'default' => '0.00'
+			],
+			'subtotal' => [
+				'type' => 'DECIMAL',
+                'constraint' => '15,2',
+				'unsigned' => true,
 			],
 			'total_price' => [
 				'type' => 'DECIMAL',

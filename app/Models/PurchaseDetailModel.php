@@ -14,13 +14,19 @@ class PurchaseDetailModel extends Model
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['purchase_order_id', 'qty', 'item_id', 'total_price'];
+    protected $allowedFields    = [
+        'purchase_order_id',
+        'item_id',
+        'qty',
+        'price',
+        'discount',
+        'subtotal'
+    ];
 
     // Validation
     protected $validationRules      = [
         'purchase_order_id' => 'required',
         'qty' => 'required',
-        'discount' => 'required',
         'item_id' => 'required',
         'subtotal' => 'required',
     ];

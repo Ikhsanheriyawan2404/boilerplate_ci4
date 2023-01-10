@@ -120,9 +120,10 @@ class Purchase extends BaseController
                 'description' => $this->request->getPost('description'),
                 'store_id' => 1,
                 'status' => $this->request->getPost('payment') == 'paid' ? 'paid' : 'open',
-                'discount' => 0,
-                'pay' => 0,
-                'total_price' => 0,
+                'discount' => $this->request->getPost('discount_price'),
+                'pay' => $this->request->getPost('payment') == 'paid' ? $this->request->getPost('pay') : 0,
+                'subtotal' => $this->request->getPost('subtotal_price'),
+                'total_price' => $this->request->getPost('total_price'),
                 'user_id' => user()->id,
             ];
 
@@ -168,36 +169,78 @@ class Purchase extends BaseController
 
             // Add new journals
             $purchases = $this->purchases->find($this->purchases->getInsertID());
+            $purchaseDetails = $this->purchaseDetails
+                ->where('purchase_order_id', $this->purchases->getInsertID())
+                ->get()->getResultObject();
             
             $this->journals->insert([
                 'store_id' => 1,
-                'journal_type_id' => 1,
+                'journal_type_id' => $purchases->status == 'open' ? 1 : 4,
                 'purchase_order_id' => $purchases->id,
-                'transaction_number' => 'JournalPembelian#1001',
+                'transaction_number' => $purchases->status == 'open' ? 'JurnalPembelian#0001' : 'JurnalKasPengeluaran#0001',
                 'date' => $purchases->transaction_date,
                 'description' => $purchases->description,
                 'user_id' => user()->id,
             ]);
 
-            $persediaanBarang = '10002';
-            $kas = '10001';
+            $kas = $this->accounts->where('code', '10001')->first()->code;
+            // $bank = $this->accounts->where('code', '10002')->first()->code;
+            $persediaanBarang = $this->accounts->where('code', '10300')->first()->code;
+            $akunHutang = $this->accounts->where('code', '21000')->first()->code;
 
             // Add new journal details
-            $journalDetails = [
-                [
+            if ($purchases->status == 'paid') {
+                $this->journalDetails->insert([
                     'journal_id' => $this->journals->getInsertID(),
-                    'account_code' => $this->accounts->where('code', $kas)->first()->code,
+                    'account_code' => $kas,
                     'debit' => 0,
                     'credit' => $purchases->total_price,
-                ],
-                [
+                ]);
+
+                if ($purchases->discount > 0) {
+                    $this->journalDetails->insert([
+                        'journal_id' => $this->journals->getInsertID(),
+                        'account_code' => $kas,
+                        'debit' => $purchases->discount,
+                        'credit' => 0,
+                    ]);
+                }
+
+                foreach ($purchaseDetails as $purchaseDetail) {
+                    $this->journalDetails->insert([
+                        'journal_id' => $this->journals->getInsertID(),
+                        'account_code' => $persediaanBarang,
+                        'debit' => $purchaseDetail->subtotal,
+                        'credit' => 0,
+                    ]);
+                }
+
+            } else {
+                $this->journalDetails->insert([
                     'journal_id' => $this->journals->getInsertID(),
-                    'account_code' => $this->accounts->where('code', $persediaanBarang)->first()->code,
+                    'account_code' => $akunHutang,
                     'debit' => 0,
                     'credit' => $purchases->total_price,
-                ],
-            ];
-            $this->journalDetails->insertBatch($journalDetails);
+                ]);
+
+                if ($purchases->discount > 0) {
+                    $this->journalDetails->insert([
+                        'journal_id' => $this->journals->getInsertID(),
+                        'account_code' => $kas,
+                        'debit' => 0,
+                        'credit' => $purchases->discount,
+                    ]);
+                }
+
+                foreach ($purchaseDetails as $purchaseDetail) {
+                    $this->journalDetails->insert([
+                        'journal_id' => $this->journals->getInsertID(),
+                        'account_code' => $persediaanBarang,
+                        'debit' => $purchaseDetail->subtotal,
+                        'credit' => 0,
+                    ]);
+                }
+            }
 
 			$this->db->transCommit();
 
@@ -234,5 +277,23 @@ class Purchase extends BaseController
     {
         $journal = $this->purchases->findJournalDetail($id);
         return $this->respond($journal);
+    }
+
+    public function checkStock($itemId)
+    {
+        $item = $this->items->find($itemId);
+
+        if ($item->stock <= $this->request->getPost('qty')) {
+            return $this->response->setJSON([
+                'message' => 'Stock Tidak Tersedia',
+                'data' => $item->stock,
+            ])->setStatusCode(400);
+        }
+        
+        return $this->response->setJSON([
+            'message' => 'Stock Tersedia',
+            'data' => $item->stock,
+        ]);
+        
     }
 }

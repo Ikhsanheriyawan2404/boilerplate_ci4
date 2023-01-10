@@ -79,6 +79,7 @@ $routes->group('', ['filter' => 'login'], function ($routes) {
         $routes->get('purchase/(:any)/item', 'Purchase::getItem/$1');
         $routes->get('purchase/(:any)/purchase-detail', 'Purchase::purchaseDetail/$1');
         $routes->get('purchase/(:any)/journal-detail', 'Purchase::journalDetail/$1');
+        $routes->post('purchase/(:any)/check-stock', 'Purchase::checkStock/$1');
         $routes->resource('purchase');
         
         $routes->get('sale/datatables', 'Sale::datatables');

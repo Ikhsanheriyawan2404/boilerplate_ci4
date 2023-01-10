@@ -122,7 +122,7 @@
                                             <tr>
                                                 <td colspan="2"></td>
                                                 <td colspan="2"><h6>Sub Total</h6></td>
-                                                <td id="subtotal_price"><h6>0</td>
+                                                <td id="subtotal_price"><h6>0</h6></td>
                                             </tr>
                                             <tr>
                                                 <td></td>
@@ -140,16 +140,16 @@
                                                             </label>
                                                         </div>
                                                         </label>
-                                                        <input type="text" name="discount" id="discount" class="form-control form-control-sm ">
+                                                        <input type="text" name="discount_input" id="discount_input" class="form-control form-control-sm ">
                                                     </div>
                                                 </td>
                                                 <td colspan="2"><h6>Potongan : </h6></td>
-                                                <td id="discount_price"><h6>0</td>
+                                                <td id="discount_price"><h6>0</h6></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2"></td>
                                                     <td colspan="2"><h4>Total</h4></td>
-                                                <td id="total_price"><h6>0</td>
+                                                <td id="total_price"><h6>0</h6></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -232,7 +232,17 @@
             e.preventDefault();
             $('#createPurchase').attr('disabled', 'disabled');
             $('#createPurchase').html('Simpan ...');
-            var formData = new FormData($('#itemForm')[0]);
+
+            let discount_price = $('#discount_price').html();
+            let subtotal_price = $('#subtotal_price').html();
+            let total_price = $('#total_price').html();
+
+            let formData = new FormData($('#itemForm')[0]);
+
+            formData.append('subtotal_price', subtotal_price);
+            formData.append('discount_price', discount_price);
+            formData.append('total_price', total_price);
+
             $.ajax({
                 data: formData,
                 url: "<?= base_url('purchase') ?>",
@@ -240,7 +250,6 @@
                 processData : false,
                 type: "POST",
                 success: function (data) {
-                    console.log(data)
                     $('#createPurchase').removeAttr('disabled');
                     $('#createPurchase').html("Simpan");
                     Swal.fire({
@@ -299,15 +308,36 @@
                 return;
             }
 
+            $.post("<?= base_url('purchase') ?>" + "/" + id + '/check-stock', {
+                qty: qty
+            })
+            .done(data => {
+                console.log(data)
+                $(this).removeClass('is-invalid')
+            })
+            .fail(response => {
+                const data = (response.responseJSON)
+                toastr.error(data.message);
+                $(this).addClass('is-invalid')
+            });
+
             let purchasePrice = $('.purchase_price[data-id=' + id + ']').val();
             let discount = $('.discount[data-id=' + id + ']').val() / 100;
             let subtotal;
             if (discount > 0) {
-                subtotal = qty * purchasePrice * discount;
+                subtotal = (qty * purchasePrice) - (qty * purchasePrice * discount);
             } else {
                 subtotal = qty * purchasePrice;
             }
             $(`.subtotal[data-id="${id}"]`).val(subtotal);
+
+            let subtotalPrice = 0;
+            $('.subtotal').each(function () {
+                subtotalPrice += parseInt($(this).val());
+            });
+
+            $(`#subtotal_price`).html(subtotalPrice);
+            $(`#total_price`).html(subtotalPrice);
         });
 
         $('body').on('input', '.purchase_price', function () {
@@ -321,35 +351,44 @@
 
             let qty = $('.qty[data-id=' + id + ']').val();
             let discount = $('.discount[data-id=' + id + ']').val() / 100;
+
             let subtotal;
             if (discount > 0) {
-                subtotal = qty * purchasePrice * discount;
+                subtotal = (qty * purchasePrice) - (qty * purchasePrice * discount);
             } else {
                 subtotal = qty * purchasePrice;
             }
             $(`.subtotal[data-id="${id}"]`).val(subtotal);
-            console.log('subtotal :' + subtotal)
         });
 
         $('body').on('input', '.discount', function () {
             let id = $(this).data('id');
             let discount = parseInt($(this).val()) / 100;
 
-            // if (!discount < 1 || !discount > 100) {
-            //     alert('Discount must be a number between 1 and 100');
-            //     return;
-            // }
+            if (!discount < 1 || !discount > 100) {
+                alert('Discount must be a number between 1 and 100');
+                return;
+            }
 
             let qty = $('.qty[data-id=' + id + ']').val();
             let purchasePrice = $('.purchase_price[data-id=' + id + ']').val();
             let subtotal;
             if (discount > 0) {
-                subtotal = qty * purchasePrice * discount;
+                subtotal = (qty * purchasePrice) - (qty * purchasePrice * discount);
             } else {
                 subtotal = qty * purchasePrice;
             }
             $(`.subtotal[data-id="${id}"]`).val(subtotal);
-            console.log('subtotal :' + subtotal)
+        });
+
+        $('body').on('input', '#discount_input', function () {
+            let discount_input = parseInt($(this).val());
+            
+            let subtotalPrice = parseInt($('#subtotal_price').text());
+            console.log(subtotalPrice)
+            const totalPrice = subtotalPrice - discount_input
+            $(`#discount_price`).html(discount_input);
+            $(`#total_price`).html(totalPrice);
         });
     });
 
@@ -360,8 +399,6 @@
     function hideItem() {
         $('#modalItem').modal('hide');
     }
-
-    
 
 </script>
 
