@@ -77,7 +77,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('custom-scripts') ?>
-
 <!-- DataTables -->
 <script src="<?= base_url('template') ?>/plugins/datatables/datatables.min.js"></script>
 <script src="<?= base_url('template') ?>/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>

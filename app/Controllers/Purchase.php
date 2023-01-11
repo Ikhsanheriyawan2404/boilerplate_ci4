@@ -64,13 +64,16 @@ class Purchase extends BaseController
                 </td>';
                 return $row->status === 'open' ? $open : $paid;
             })
+            ->edit('date', function ($row) {
+                return '<a href="'.base_url("purchase/$row->id") . '">'.$row->date.'</a>';
+            })
             ->add('action', function ($row) {
                 $btn = '<td class="text-center">
                     <div class="dropdown d-inline-block">
                         <a aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="mb-2 mr-2 dropdown-toggle text-white btn-primary btn-sm"></a>
                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
                             <a href="javascript:void(0)" data-id="' . $row->id . '" id="showDetails" class="dropdown-item">Detail</a>
-                            <a id="editItem" href="javascript:void(0)" data-id="' .  $row->id . '" class="dropdown-item">Edit</a>
+                            <a href="'.base_url("purchase/$row->id/edit") . '" class="dropdown-item">Edit</a>
                         </div>
                     </div>
                 </td>';
@@ -86,11 +89,18 @@ class Purchase extends BaseController
         ]);
     }
 
-    public function show($itemId)
+    public function show($purchaseId)
     {
+        $purchase = $this->purchases->find($purchaseId);
+        $purchaseDetails = $this->purchases->findPurchaseDetail($purchaseId);
+        if (! $purchase) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
 
         return view('purchases/show', [
             'title' => 'Detail Pembelian',
+            'purchase' => $purchase,
+            'purchaseDetails' => $purchaseDetails,
         ]);
     }
 
@@ -104,26 +114,13 @@ class Purchase extends BaseController
 
     public function edit($purchaseId)
     {
-        $data = [
-            'store_id' => 1,
-            'journal_type_id' => 1,
-            'purchase_order_id' => 2,
-            'transaction_number' => 'JurnalPembelian#0001',
-            'date' => '12-12-2020',
-            'user_id' => user()->id,
-        ];
-        $this->journals->update(1, $data);
-        $journal = $this->journals->getInsertID();
-        // return $this->response->setJSON($$this->journals->getInsertID());
-        return $this->response->setJSON($journal);
-
         $purchase = $this->purchases->find($purchaseId);
         if (! $purchase) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
         return view('purchases/edit', [
-            'title' => 'Detail Pembelian',
+            'title' => 'Edit Pembelian',
             'vendors' => $this->vendors->where('type', 'vendor')->findAll(),
             'purchase' => $purchase,
         ]);
