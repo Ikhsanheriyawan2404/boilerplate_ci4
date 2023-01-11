@@ -15,7 +15,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Create</li>
+                                <li class="breadcrumb-item active" aria-current="page">Edit</li>
                             </ol>
                         </nav>
                     </div>
@@ -166,7 +166,7 @@
                                         <a href="<?= base_url('purchase') ?>" class="btn btn-secondary btn-sm">CANCEL</a>
                                     </div>
                                     <div class="btn-group">
-                                        <button class="btn btn-primary btn-sm" id="createPurchase">SIMPAN</button>
+                                        <button class="btn btn-primary btn-sm" id="editPurchase">UBAH PEMBELIAN</button>
                                         <button type="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" class="dropdown-toggle-split dropdown-toggle btn btn-primary btn-sm"><span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="dropdown-menu">
@@ -211,22 +211,21 @@
     window.onload = function() {
         const div = document.getElementsByClassName('app-container')[0];
         div.classList.add('closed-sidebar');
-
-        let purchaseId = $('#purchase_id').val();
-        $.get("<?= base_url('purchase') ?>" + "/" + purchaseId + '/purchase-detailPisan', function(data) {
-            data.forEach(item => {
-                    console.log(item);
-                    var tr = $('<tr>');
-                    for (var i = 0; i < 7; i++) {
-                        var td = $('<td>').html(item[i]);
-                        tr.append(td);
-                    }
-                    $('#table-order tbody').append(tr);
-            });
-        });
     }
 
     $(document).ready(function () {
+        let purchaseId = $('#purchase_id').val();
+        $.get("<?= base_url('purchase') ?>" + "/" + purchaseId + '/purchase-detailPisan', function(data) {
+            data.forEach(item => {
+                var tr = $('<tr>');
+                for (var i = 0; i < 7; i++) {
+                    var td = $('<td>').html(item[i]);
+                    tr.append(td);
+                }
+                $('#table-order tbody').append(tr);
+            });
+        });
+
         let table1, table2;
 
         table2 = $('#table-item').DataTable({
@@ -244,10 +243,10 @@
         });
 
 
-        $('body').on('click', '#createPurchase', function(e) {
+        $('body').on('click', '#editPurchase', function(e) {
             e.preventDefault();
-            $('#createPurchase').attr('disabled', 'disabled');
-            $('#createPurchase').html('Simpan ...');
+            $('#editPurchase').attr('disabled', 'disabled');
+            $('#editPurchase').html('Simpan ...');
 
             let discount_price = $('#discount_price').html();
             let subtotal_price = $('#subtotal_price').html();
@@ -266,8 +265,8 @@
                 processData : false,
                 type: "POST",
                 success: function (data) {
-                    $('#createPurchase').removeAttr('disabled');
-                    $('#createPurchase').html("Simpan");
+                    $('#editPurchase').removeAttr('disabled');
+                    $('#editPurchase').html("Simpan");
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -280,8 +279,8 @@
                 error: function(response) {
                     const data = response.responseJSON;
                     console.log(data)
-                    $('#createPurchase').removeAttr('disabled');
-                    $('#createPurchase').html("Simpan");
+                    $('#editPurchase').removeAttr('disabled');
+                    $('#editPurchase').html("Simpan");
                     Swal.fire({
                         icon: 'error',
                         title: 'Oppss',

@@ -88,6 +88,7 @@ class Purchase extends BaseController
 
     public function show($itemId)
     {
+
         return view('purchases/show', [
             'title' => 'Detail Pembelian',
         ]);
@@ -103,13 +104,28 @@ class Purchase extends BaseController
 
     public function edit($purchaseId)
     {
-        // return $this->response->setJSON($this->purchases->find($itemId));
-        // $journal = $this->purchases->findPurchaseDetail($itemId);
-        // return $this->response->setJSON($journal);
+        $data = [
+            'store_id' => 1,
+            'journal_type_id' => 1,
+            'purchase_order_id' => 2,
+            'transaction_number' => 'JurnalPembelian#0001',
+            'date' => '12-12-2020',
+            'user_id' => user()->id,
+        ];
+        $this->journals->update(1, $data);
+        $journal = $this->journals->getInsertID();
+        // return $this->response->setJSON($$this->journals->getInsertID());
+        return $this->response->setJSON($journal);
+
+        $purchase = $this->purchases->find($purchaseId);
+        if (! $purchase) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
         return view('purchases/edit', [
             'title' => 'Detail Pembelian',
             'vendors' => $this->vendors->where('type', 'vendor')->findAll(),
-            'purchase' => $this->purchases->find($purchaseId),
+            'purchase' => $purchase,
         ]);
     }
 
@@ -288,7 +304,94 @@ class Purchase extends BaseController
 
     public function update($purchaseId)
     {
-       return $purchaseId; 
+        $this->db->transBegin();
+		try {
+            // Find purchase order and purchase order detail based on id
+            $purchases = $this->purchases->find($purchaseId);
+            $purchaseDetails = $this->purchaseDetails
+                ->where('purchase_order_id', $purchaseId)
+                ->get()->getResultObject();
+
+            $data = [
+                'transaction_date' => $this->request->getPost('transaction_date'),
+                'overdue_date' => $this->request->getPost('overdue_date'),
+                'description' => $this->request->getPost('description'),
+                'store_id' => 1,
+                'status' => $this->request->getPost('payment') == 'paid' ? 'paid' : 'open',
+                'discount' => $this->request->getPost('discount_price'),
+                'pay' => $this->request->getPost('payment') == 'paid' ? $this->request->getPost('pay') : 0,
+                'subtotal' => $this->request->getPost('subtotal_price'),
+                'total_price' => $this->request->getPost('total_price'),
+            ];
+
+            // Update purchase order
+            if ($this->purchases->update($purchaseId, $data) === false) {
+                $errorMessages = [];
+                foreach ($this->purchases->errors() as $error) {
+                    $errorMessages[] = $error;
+                }
+                throw new InvalidArgumentException(json_encode($errorMessages), 422);
+            }
+
+            // Delete existing purchase order details
+            $this->purchaseDetails->deleteWhere(['purchase_order_id' => $purchaseId]);
+
+            // Add new purchase order details
+            $totalRequestItem = $this->request->getPost('item_code');
+            if ($totalRequestItem == null) {
+                throw new InvalidArgumentException('Item tidak boleh kosong', 400);
+            } else {
+                for ($i = 0; $i < count($totalRequestItem); $i++) {
+                    $data = [
+                        'purchase_order_id' => $purchaseId,
+                        'item_id' => $this->request->getPost('item_code')[$i],
+                        'qty' => $this->request->getPost('qty')[$i],
+                        'price' => $this->request->getPost('purchase_price')[$i],
+                        'discount' => $this->request->getPost('discount')[$i],
+                        'subtotal' => $this->request->getPost('subtotal')[$i],
+                    ];
+    
+                    if ($this->purchaseDetails->save($data) === false) {
+                        $errorMessages = [];
+                        foreach ($this->purchaseDetails->errors() as $error) {
+                            $errorMessages[] = $error;
+                        }
+                        throw new InvalidArgumentException(json_encode($errorMessages), 422);
+                    }
+
+                    // Update stock item
+                    $item = $this->items->find($this->request->getPost('item_code')[$i]);
+                    $this->items->update($this->request->getPost('item_code')[$i], [
+                        'stock' => $item->stock + $this->request->getPost('qty')[$i],
+                    ]);
+                }
+            }
+
+            // WIP - Update journals and journal details
+
+			$this->db->transCommit();
+
+		} catch (InvalidArgumentException $e) {
+
+			$this->db->transRollback();
+
+            $errorMessages = json_decode($e->getMessage());
+            if ($errorMessages == null) {
+                $validationFailed = $e->getMessage();
+            } else {
+                $validationFailed = 'Validasi Gagal';
+            }
+
+            return $this->response->setJSON([
+                'message' => $validationFailed,
+                'errors' => $errorMessages ?? null,
+            ])->setStatusCode($e->getCode());
+		}
+
+        return $this->response->setJSON([
+            'message' => 'Berhasil Menambahkan Order Pembelian',
+            'data' => $this->purchases->find($this->purchases->getInsertID()),
+        ])->setStatusCode(200);
     }
 
     public function purchaseDetail($id = null)
@@ -313,7 +416,6 @@ class Purchase extends BaseController
 
             $data[] = $row;
         }
-        // return $this->response->setJSON($items);
         return $this->response->setJSON($data);
     }
 
