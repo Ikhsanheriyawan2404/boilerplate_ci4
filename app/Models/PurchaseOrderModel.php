@@ -53,8 +53,8 @@ class PurchaseOrderModel extends Model
         $db = Database::connect();
         $builder = $db->table('purchase_details as pd');
         return $builder->select('
-            pd.id, pd.qty, pd.item_id, pd.subtotal, pd.price,
-            items.name as item_name,
+            pd.id, pd.qty, pd.item_id, pd.subtotal, pd.price, pd.discount,
+            items.name as item_name, item_code,
             po.transaction_date, po.overdue_date, po.payment_date, po.description, po.total_price')
             ->where('purchase_order_id', $id)
             ->where('pd.purchase_order_id', $id)

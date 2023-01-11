@@ -86,11 +86,30 @@ class Purchase extends BaseController
         ]);
     }
 
+    public function show($itemId)
+    {
+        return view('purchases/show', [
+            'title' => 'Detail Pembelian',
+        ]);
+    }
+
     public function new()
     {
         return view('purchases/new', [
             'title' => 'Pembelian/Purchase',
             'vendors' => $this->vendors->where('type', 'vendor')->findAll(),
+        ]);
+    }
+
+    public function edit($purchaseId)
+    {
+        // return $this->response->setJSON($this->purchases->find($itemId));
+        // $journal = $this->purchases->findPurchaseDetail($itemId);
+        // return $this->response->setJSON($journal);
+        return view('purchases/edit', [
+            'title' => 'Detail Pembelian',
+            'vendors' => $this->vendors->where('type', 'vendor')->findAll(),
+            'purchase' => $this->purchases->find($purchaseId),
         ]);
     }
 
@@ -201,8 +220,8 @@ class Purchase extends BaseController
                     $this->journalDetails->insert([
                         'journal_id' => $this->journals->getInsertID(),
                         'account_code' => $kas,
-                        'debit' => $purchases->discount,
-                        'credit' => 0,
+                        'debit' => 0,
+                        'credit' => $purchases->discount,
                     ]);
                 }
 
@@ -236,8 +255,8 @@ class Purchase extends BaseController
                     $this->journalDetails->insert([
                         'journal_id' => $this->journals->getInsertID(),
                         'account_code' => $persediaanBarang,
-                        'debit' => $purchaseDetail->subtotal,
-                        'credit' => 0,
+                        'debit' => 0,
+                        'credit' => $purchaseDetail->subtotal,
                     ]);
                 }
             }
@@ -267,10 +286,35 @@ class Purchase extends BaseController
         ])->setStatusCode(200);
     }
 
+    public function update($purchaseId)
+    {
+       return $purchaseId; 
+    }
+
     public function purchaseDetail($id = null)
     {
         $purchase = $this->purchases->findPurchaseDetail($id);
         return $this->respond($purchase);
+    }
+
+    public function getPurchaseDetail($purchaseDetailId)
+    {
+        $items = $this->purchases->findPurchaseDetail($purchaseDetailId);
+        $data=[];
+        foreach($items as $item) {
+            $row = [];
+            $row[] = '<input name="item_code[]" type="hidden" value="'.$item->id.'"><span class="btn btn-success">' . $item->item_code . '</span';
+            $row[] = $item->item_name;
+            $row[] = '<input type="number" name="qty[]" data-id="'.$item->id.'" class="form-control form-control-sm qty" value="'.$item->qty.'">';
+            $row[] = '<input type="number" name="purchase_price[]" data-id="'.$item->id.'" class="form-control form-control-sm purchase_price" value="'.$item->price.'">';
+            $row[] = '<input type="number" name="discount[]" data-id="'.$item->id.'" class="form-control form-control-sm discount" value="'.$item->discount.'">';
+            $row[] = '<input type="number" name="subtotal[]" class="form-control form-control-sm subtotal" data-id="'.$item->id.'" value="'.$item->subtotal.'" readonly>';
+            $row[] = '<button class="btn btn-sm btn-danger removeItem">-</button>';
+
+            $data[] = $row;
+        }
+        // return $this->response->setJSON($items);
+        return $this->response->setJSON($data);
     }
 
     public function journalDetail($id = null)
