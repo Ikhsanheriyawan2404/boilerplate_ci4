@@ -77,6 +77,5 @@ class PurchaseOrderModel extends Model
             ->join('journal_transactions as jt', 'jt.journal_id = journals.id')
             ->join('accounts', 'jt.account_code = accounts.code')
             ->get()->getResultObject();
-        
     }
 }

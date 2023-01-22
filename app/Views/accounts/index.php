@@ -94,7 +94,7 @@ $(document).ready(function() {
         columns: [
             {data: 'no', orderable: false},
             {data: 'code'},
-            {data: 'name'},
+            {data: 'ame'},
             {data: 'subgroup_name'},
             {data: 'saldo'},
             {data: 'action', orderable: false},

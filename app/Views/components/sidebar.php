@@ -163,6 +163,14 @@
             <li>
                 <a href="<?= base_url('report') ?>">
                     <i class="metismenu-icon pe-7s-display2"></i>
+                    Biaya
+                </a>
+            </li>
+            <?php endif ?>
+            <?php if (has_permission('client-module')) : ?>
+            <li>
+                <a href="<?= base_url('report') ?>">
+                    <i class="metismenu-icon pe-7s-display2"></i>
                     Report
                 </a>
             </li>
